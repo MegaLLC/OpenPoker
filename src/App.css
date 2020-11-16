@@ -1,3 +1,67 @@
+html,body{
+  height:100%;
+  margin:0;
+  padding:0;
+}
+
+.container-fluid,.row{
+  height:100vh;
+}
+
+.board-container{
+  padding:40px;
+  box-sizing:border-box;
+}
+
+.board{
+  height:100%;
+  padding:40px;
+  width:100%;
+  display: flex;
+  align-items: center;
+}
+
+.board-svg{
+  height:50%;
+  width:100%;
+}
+
+.board-rect{
+  height:100%;
+  padding:40px;
+  width:100%;
+}
+
+/*
+.main{
+  height: 100vh
+}
+
+.board-r{
+  height: 100vh
+}
+
+.board-c{
+  height: 100vh
+}
+
+.board{
+  height:100%;
+  width:100%;
+}
+
+.board-svg{
+  height:100%;
+  width:100%;
+}
+*/
+
+
+
+
+
+
+/*
 .App {
   text-align: center;
 }
@@ -36,3 +100,8 @@
     transform: rotate(360deg);
   }
 }
+
+.header {
+  text-align: center;
+}
+*/
