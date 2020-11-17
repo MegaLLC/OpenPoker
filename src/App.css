@@ -4,6 +4,10 @@ html,body{
   padding:0;
 }
 
+.overall{
+  background-color:#191b1c;
+}
+
 .container-fluid,.row{
   height:100vh;
 }
@@ -21,16 +25,16 @@ html,body{
   align-items: center;
 }
 
-.board-svg{
-  height:50%;
-  width:100%;
+#board-table{
+  background-color:#8b0000;
+  border-style:hidden;
+  /* border-radius: 100px; */
 }
 
-.board-rect{
-  height:100%;
-  padding:40px;
-  width:100%;
+.board-table-row{
+  border-style:hidden;
 }
+
 
 /*
 .main{
@@ -55,11 +59,6 @@ html,body{
   width:100%;
 }
 */
-
-
-
-
-
 
 /*
 .App {
