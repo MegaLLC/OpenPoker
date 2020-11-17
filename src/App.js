@@ -14,37 +14,47 @@ const App = () => (
             <Table id = "board-table">
               <thead>
                 <tr class = "board-table-row">
-                  <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Username</th>
-                  <th>Username</th>
+                  <th></th>
+                  <th>Player 1</th>
+                  <th>Player 2</th>
+                  <th>Player 3</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr class = "board-table-row">
-                  <td>1</td>
-                  <td>Mark</td>
+                  <td>Player 4</td>
+                  <td></td>
                   <td>
                     <Table>
                       <tr class = "board-table-row">
-                        <td>a</td>
-                        <td>b</td>
-                        <td>c</td>
-                        <td>d</td>
-                        <td>e</td>
+                        <td>
+                          <img src = "./cards/CLUB-1.svg" class = "board-card"></img>
+                        </td>
+                        <td>
+                          <img src = "./cards/HEART-11-JACK.svg" class = "board-card"></img>
+                        </td>
+                        <td>
+                          <img src = "./cards/CLUB-3.svg" class = "board-card"></img>
+                        </td>
+                        <td>
+                          <img src = "./cards/CLUB-4.svg" class = "board-card"></img>
+                        </td>
+                        <td>
+                          <img src = "./cards/CLUB-5.svg" class = "board-card"></img>
+                        </td>
                       </tr>
                     </Table>
                   </td>
-                  <td>@mdo</td>
-                  <td>@mdo</td>
+                  <td></td>
+                  <td>Player 8</td>
                 </tr>
                 <tr class = "board-table-row">
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>@mdo</td>
+                  <td></td>
+                  <td>Player 5</td>
+                  <td>Player 6</td>
+                  <td>Player 7</td>
+                  <td></td>
                 </tr>
               </tbody>
             </Table>
