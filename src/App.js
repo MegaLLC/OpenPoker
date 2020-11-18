@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Row'
-import Table from 'react-bootstrap/Table';
+import Badge from 'react-bootstrap/Badge'
+
 
 import './App.css';
 
@@ -14,6 +14,7 @@ WholeBoard
   PlayerList
     Player
   PokerTable
+    PotDisplay
     AllTableCards
       TableCard
   ControlBox
@@ -38,12 +39,22 @@ function createPlayerlist(players) {
     return playerlist;
 }
 
+class PotDisplay extends React.Component{
+  render () {
+    return (
+        <Badge variant="info" className="pot-display"><h4>6969$</h4></Badge>
+    )
+  }
+}
+
 
 class PokerTable extends React.Component{
   render () {
     return (
       <div class="col-10 m-auto table" style={{height:"100%"}}>
         {/* Inside table */}
+        <PotDisplay />
+        
         <div class="board-cards">
           <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-1.svg" class="card-image"></img></div>
           <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-2.svg" class="card-image"></img></div>
@@ -51,7 +62,6 @@ class PokerTable extends React.Component{
           <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-4.svg" class="card-image"></img></div>
           <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-5.svg" class="card-image"></img></div>
         </div>
-
       </div>
     )
   }

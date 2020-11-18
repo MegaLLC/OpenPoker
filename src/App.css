@@ -17,10 +17,11 @@
 }
 
 .card {
+	width: 120px;
+	height: calc(120px * 1.39);
 	position: relative;
-	height: 100px;
-	width: 70px;
-	border: 3px solid black;
+  border: 3px solid black;
+  border-radius: 10px;
 }
 
 .card-image{
@@ -34,4 +35,14 @@
   align-items: center;
   border: none;
   justify-content: center;
+}
+
+.pot-display {
+  position: absolute;
+	display: block;
+  width: 20%;
+  height: 10%;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, -50%);
 }
