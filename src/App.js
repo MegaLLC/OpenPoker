@@ -17,7 +17,14 @@ const App = () => (
       </Row>
       <Row class = "board-container m-auto bg-white" style={{height:"40vh"}}>
           <div class="col-10 m-auto table" style={{height:"100%"}}>
-        a
+            {/* Inside table */}
+            <div class="board-cards">
+              <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-1.svg" class="card-image"></img></div>
+              <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-2.svg" class="card-image"></img></div>
+              <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-3.svg" class="card-image"></img></div>
+              <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-4.svg" class="card-image"></img></div>
+              <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-5.svg" class="card-image"></img></div>
+            </div>
           </div>
           {/* You */}
           <div class="player bg-info" style={{left: "50%", top: "78%"}}></div>
@@ -35,6 +42,8 @@ const App = () => (
           {/* Top */}
           <div class="player bg-info" style={{left: "62%", top: "12%"}}></div>
           <div class="player bg-info" style={{left: "38%", top: "12%"}}></div>
+
+          
       </Row>
       <Row class = "board-container m-auto bg-white" style={{height:"35vh"}}></Row>
     </Container>
