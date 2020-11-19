@@ -14,8 +14,8 @@
 .player {
 	position: absolute;
 	display: block;
-	width: 250px;
-	height: 160px;
+	width: 200px;
+	height: 130px;
   transform: translate(-50%, -50%);
   border-radius : 10px;
   color:white;
@@ -24,8 +24,8 @@
 }
 
 .card {
-	width: 100px;
-	height: calc(100px * 1.39);
+	width: 85px;
+	height: calc(85px * 1.39);
 	position: relative;
   border: 3px solid black;
   border-radius: 10px;
@@ -62,4 +62,11 @@
   left: 50%;
   top: 20%;
   transform: translate(-50%, -50%);
+}
+
+#bottomRight
+{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;    
 }

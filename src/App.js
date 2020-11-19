@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Badge from 'react-bootstrap/Badge'
+import Button from 'react-bootstrap/Button'
 
 
 import './App.css';
@@ -28,13 +29,13 @@ class Player extends React.Component{
   render () {
     return (
       <div class="player bg-info" style={this.props.alignment}>
-        <h4>{this.props.username}</h4>
-        <h5>{this.props.chips}</h5>
-          <div class="board-cards-hand"> 
-            <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-1.svg" class="card-image"></img></div>
-            <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-2.svg" class="card-image"></img></div>
-          </div>
+        <div class="board-cards-hand"> 
+          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-1.svg" class="card-image"></img></div>
+          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-2.svg" class="card-image"></img></div>
         </div>
+        <h5>{this.props.username}</h5>
+        <h6>{this.props.chips}</h6>
+      </div>
     );
   }
 };
@@ -60,7 +61,7 @@ class PotDisplay extends React.Component{
 class PokerTable extends React.Component{
   render () {
     return (
-      <div class="col-10 m-auto table" style={{height:"100%"}}>
+      <div class="col-9 m-auto table" style={{height:"100%"}}>
         {/* Inside table */}
         <PotDisplay />
         
@@ -73,6 +74,18 @@ class PokerTable extends React.Component{
         </div>
       </div>
     )
+  }
+};
+
+class ControlBox extends React.Component{
+  render() {
+    return (
+       <div id = "bottomRight">
+           <Button variant="primary">Fold</Button>{' '}
+          <Button variant="secondary">Call</Button>{' '}
+          <Button variant="success">Raise</Button>{' '}
+      </div>
+    );
   }
 };
 
@@ -90,6 +103,7 @@ class WholeBoard extends React.Component{
               <PokerTable />
             </Row>
             <Row class = "board-container m-auto bg-white" style={{height:"35vh"}}>
+              <ControlBox />
             </Row>
         </Container>
       </div>
