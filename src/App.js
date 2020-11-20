@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button'
 
 
 import './App.css';
+import './Card.css';
 
 {/* 
 React Component Layout
@@ -17,7 +18,7 @@ WholeBoard
   PokerTable
     PotDisplay
     AllTableCards
-      TableCard
+      Card
   ControlBox
     <Fold, Call, Raise buttons etc>
 
@@ -30,8 +31,8 @@ class Player extends React.Component{
     return (
       <div class="player bg-info" style={this.props.alignment}>
         <div class="board-cards-hand"> 
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-1.svg" class="card-image"></img></div>
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-2.svg" class="card-image"></img></div>
+          <Card card="AS.svg"></Card>
+          <Card card="2C.svg"></Card>
         </div>
         <h5>{this.props.username}</h5>
         <h6>{this.props.chips}</h6>
@@ -39,6 +40,7 @@ class Player extends React.Component{
     );
   }
 };
+
 
 function createPlayerlist(players) {
 
@@ -49,12 +51,26 @@ function createPlayerlist(players) {
     return playerlist;
 }
 
+
 class PotDisplay extends React.Component{
   render () {
     return (
         <Badge variant="info" className="pot-display"><h4>6969$</h4></Badge>
     )
   }
+}
+
+class Card extends React.Component{
+  render () {
+    return (
+    <div class ="card-wrapper">
+      <div class = "card bg-secondary mx-1">
+        <img src={"./cards/CARDBACK.svg"} class="card-image card-back"></img>
+        <img src={"./cards/" + this.props.card} class="card-image card-front"></img>
+      </div>
+    </div>
+    )
+    }
 }
 
 
@@ -64,13 +80,12 @@ class PokerTable extends React.Component{
       <div class="col-9 m-auto table" style={{height:"100%"}}>
         {/* Inside table */}
         <PotDisplay />
-        
         <div class="board-cards">
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-1.svg" class="card-image"></img></div>
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-2.svg" class="card-image"></img></div>
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-3.svg" class="card-image"></img></div>
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-4.svg" class="card-image"></img></div>
-          <div class = "card bg-secondary mx-1"><img src="./cards/CLUB-5.svg" class="card-image"></img></div>
+          <Card card="10C.svg"></Card>
+          <Card card="2C.svg"></Card>
+          <Card card="3C.svg"></Card>
+          <Card card="4C.svg"></Card>
+          <Card card="5C.svg"></Card>
         </div>
       </div>
     )
@@ -81,7 +96,7 @@ class ControlBox extends React.Component{
   render() {
     return (
        <div id = "bottomRight">
-           <Button variant="primary">Fold</Button>{' '}
+          <Button variant="primary">Fold</Button>{' '}
           <Button variant="secondary">Call</Button>{' '}
           <Button variant="success">Raise</Button>{' '}
       </div>

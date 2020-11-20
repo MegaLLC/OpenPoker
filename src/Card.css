@@ -1,0 +1,28 @@
+.card-wrapper {
+  display: inline-block;
+}
+
+.card-wrapper:hover .card {
+  transform: rotateY(180deg);
+}
+
+.card {
+  position: relative;
+  transform: perspective(1000px);
+  transform-style: preserve-3d;
+  transition: all 0.7s linear;
+}
+
+.card-back,
+.card-front {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  backface-visibility: hidden;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
