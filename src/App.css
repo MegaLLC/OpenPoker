@@ -23,6 +23,14 @@
   text-emphasis: bold;
 }
 
+.table-chip {
+  position: absolute;
+	display: block;
+  width: 2%;
+  height: 3%;
+  transform: translate(-50%, -50%);
+}
+
 .card {
 	width: 85px;
 	height: calc(85px * 1.39);

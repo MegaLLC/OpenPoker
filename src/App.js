@@ -17,6 +17,7 @@ WholeBoard
     Player
   PokerTable
     PotDisplay
+    TableChips
     AllTableCards
       Card
   ControlBox
@@ -29,14 +30,18 @@ WholeBoard
 class Player extends React.Component{
   render () {
     return (
-      <div class="player bg-info" style={this.props.alignment}>
-        <div class="board-cards-hand"> 
-          <Card card="AS.svg"></Card>
-          <Card card="2C.svg"></Card>
+      <div>
+        <div class="player bg-info" style={this.props.options.alignment}>
+          <div class="board-cards-hand"> 
+            <Card card="AC.svg"></Card>
+            <Card card="KS.svg"></Card>
+          </div>
+          <h5>{this.props.options.username}</h5>
+          <h6>{this.props.options.chips}</h6>
         </div>
-        <h5>{this.props.username}</h5>
-        <h6>{this.props.chips}</h6>
+        <Badge variant="info" className="table-chip" style={this.props.options.chip_alignment}><h6>{this.props.options.tablechip}</h6></Badge>
       </div>
+
     );
   }
 };
@@ -46,7 +51,7 @@ function createPlayerlist(players) {
 
     let playerlist = []; 
     for (var i = 0; i <= 8; i++){
-      playerlist.push(<Player alignment = {players[i].alignment} key = {players[i].seat} username = {players[i].username} chips = {players[i].chips}/>);
+      playerlist.push(<Player options={players[i]}/>);
     }
     return playerlist;
 }
@@ -70,7 +75,15 @@ class Card extends React.Component{
       </div>
     </div>
     )
-    }
+  }
+}
+
+class TableChips extends React.Component {
+  render () {
+    return (
+      <Badge variant="info" className="table-chip"><h6>6969$</h6></Badge>
+    )
+  }
 }
 
 
@@ -91,6 +104,7 @@ class PokerTable extends React.Component{
     )
   }
 };
+
 
 class ControlBox extends React.Component{
   render() {
@@ -114,8 +128,8 @@ class WholeBoard extends React.Component{
               <div class="col-10 m-auto bg-success"></div>
             </Row>
             <Row class = "board-container m-auto bg-white" style={{height:"40vh"}}>
+              <PokerTable players={this.props.players}/>
               {createPlayerlist(this.props.players)}
-              <PokerTable />
             </Row>
             <Row class = "board-container m-auto bg-white" style={{height:"35vh"}}>
               <ControlBox />
@@ -132,15 +146,15 @@ const App = () => (
 
 
 const PLAYERS = [
-  {seat: "1", alignment:{left: "50%", top: "78%"}, username: "user1", chips: 69},
-  {seat: "2", alignment:{left: "32%", top: "78%"}, username: "user2", chips: 69},
-  {seat: "3", alignment:{left: "20%", top: "56%"}, username: "user3", chips: 69},
-  {seat: "4", alignment:{left: "20%", top: "30%"}, username: "user4", chips: 69},
-  {seat: "5", alignment:{left: "38%", top: "12%"}, username: "user5", chips: 69},
-  {seat: "6", alignment:{left: "62%", top: "12%"}, username: "user6", chips: 69},
-  {seat: "7", alignment:{left: "80%", top: "30%"}, username: "user7", chips: 69},
-  {seat: "8", alignment:{left: "80%", top: "56%"}, username: "user8", chips: 69},
-  {seat: "9", alignment:{left: "68%", top: "78%"}, username: "user9", chips: 69},
+  {seat: "1", alignment:{left: "50%", top: "78%"}, username: "user1", chips: 69, chip_alignment: {left: "50%", top: "60%"}, tablechip: 1},
+  {seat: "2", alignment:{left: "32%", top: "78%"}, username: "user2", chips: 69, chip_alignment: {left: "35%", top: "60%"}, tablechip: 2},
+  {seat: "3", alignment:{left: "20%", top: "56%"}, username: "user3", chips: 69, chip_alignment: {left: "31%", top: "52%"}, tablechip: 3},
+  {seat: "4", alignment:{left: "20%", top: "30%"}, username: "user4", chips: 69, chip_alignment: {left: "31%", top: "35%"}, tablechip: 4},
+  {seat: "5", alignment:{left: "38%", top: "12%"}, username: "user5", chips: 69, chip_alignment: {left: "35%", top: "30%"}, tablechip: 5},
+  {seat: "6", alignment:{left: "62%", top: "12%"}, username: "user6", chips: 69, chip_alignment: {left: "65%", top: "30%"}, tablechip: 6},
+  {seat: "7", alignment:{left: "80%", top: "30%"}, username: "user7", chips: 69, chip_alignment: {left: "69%", top: "35%"}, tablechip: 7},
+  {seat: "8", alignment:{left: "80%", top: "56%"}, username: "user8", chips: 69, chip_alignment: {left: "69%", top: "52%"}, tablechip: 8},
+  {seat: "9", alignment:{left: "68%", top: "78%"}, username: "user9", chips: 69, chip_alignment: {left: "65%", top: "60%"}, tablechip: 9},
 ];
 
 
