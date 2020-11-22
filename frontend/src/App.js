@@ -25,6 +25,8 @@ WholeBoard
 
 
     Add mp3 sound when you win on showdown
+
+    Things that are actually state:
 */}
 
 class Player extends React.Component{
@@ -150,12 +152,29 @@ const PLAYERS = [
   {seat: "2", alignment:{left: "32%", top: "78%"}, username: "user2", chips: 69, chip_alignment: {left: "35%", top: "60%"}, tablechip: 2},
   {seat: "3", alignment:{left: "20%", top: "56%"}, username: "user3", chips: 69, chip_alignment: {left: "31%", top: "52%"}, tablechip: 3},
   {seat: "4", alignment:{left: "20%", top: "30%"}, username: "user4", chips: 69, chip_alignment: {left: "31%", top: "35%"}, tablechip: 4},
-  {seat: "5", alignment:{left: "38%", top: "12%"}, username: "user5", chips: 69, chip_alignment: {left: "35%", top: "30%"}, tablechip: 5},
-  {seat: "6", alignment:{left: "62%", top: "12%"}, username: "user6", chips: 69, chip_alignment: {left: "65%", top: "30%"}, tablechip: 6},
+  {seat: "5", alignment:{left: "38%", top: "11%"}, username: "user5", chips: 69, chip_alignment: {left: "35%", top: "30%"}, tablechip: 5},
+  {seat: "6", alignment:{left: "62%", top: "11%"}, username: "user6", chips: 69, chip_alignment: {left: "65%", top: "30%"}, tablechip: 6},
   {seat: "7", alignment:{left: "80%", top: "30%"}, username: "user7", chips: 69, chip_alignment: {left: "69%", top: "35%"}, tablechip: 7},
   {seat: "8", alignment:{left: "80%", top: "56%"}, username: "user8", chips: 69, chip_alignment: {left: "69%", top: "52%"}, tablechip: 8},
   {seat: "9", alignment:{left: "68%", top: "78%"}, username: "user9", chips: 69, chip_alignment: {left: "65%", top: "60%"}, tablechip: 9},
 ];
 
+
+/*
+var GAME = {
+  gameid: 1,
+  playerobj: [
+    {seat: "1", alignment:{left: "50%", top: "78%"}, username: "user1", chips: 69, chip_alignment: {left: "50%", top: "60%"}, tablechip: 1},
+    {seat: "2", alignment:{left: "32%", top: "78%"}, username: "user2", chips: 69, chip_alignment: {left: "35%", top: "60%"}, tablechip: 2},
+    {seat: "3", alignment:{left: "20%", top: "56%"}, username: "user3", chips: 69, chip_alignment: {left: "31%", top: "52%"}, tablechip: 3},
+    {seat: "4", alignment:{left: "20%", top: "30%"}, username: "user4", chips: 69, chip_alignment: {left: "31%", top: "35%"}, tablechip: 4},
+    {seat: "5", alignment:{left: "38%", top: "11%"}, username: "user5", chips: 69, chip_alignment: {left: "35%", top: "30%"}, tablechip: 5},
+    {seat: "6", alignment:{left: "62%", top: "11%"}, username: "user6", chips: 69, chip_alignment: {left: "65%", top: "30%"}, tablechip: 6},
+    {seat: "7", alignment:{left: "80%", top: "30%"}, username: "user7", chips: 69, chip_alignment: {left: "69%", top: "35%"}, tablechip: 7},
+    {seat: "8", alignment:{left: "80%", top: "56%"}, username: "user8", chips: 69, chip_alignment: {left: "69%", top: "52%"}, tablechip: 8},
+    {seat: "9", alignment:{left: "68%", top: "78%"}, username: "user9", chips: 69, chip_alignment: {left: "65%", top: "60%"}, tablechip: 9},
+  ]
+}
+*/
 
 export default App; 
