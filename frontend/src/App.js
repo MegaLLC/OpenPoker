@@ -26,64 +26,66 @@ WholeBoard
 
     Add mp3 sound when you win on showdown
 
+    button greyed out state. 
+
     Things that are actually state:
+    style={this.props.options.alignment}
+
+    DONT FORGET TO LOOK INTO REACT KEYS ON COMPONENT LISTS
+
+    hd and em
 */}
 
+
+// if cards empty conditionally render nothing. 
 class Player extends React.Component{
   render () {
     return (
       <div>
-        <div class="player bg-info" style={this.props.options.alignment}>
+        <div class="player bg-info" id = {this.props.playerid}>
           <div class="board-cards-hand"> 
-            <Card card="AC.svg"></Card>
-            <Card card="KS.svg"></Card>
+            <Card card={this.props.options.card1}></Card>
+            <Card card={this.props.options.card2}></Card>
           </div>
           <h5>{this.props.options.username}</h5>
           <h6>{this.props.options.chips}</h6>
         </div>
-        <Badge variant="info" className="table-chip" style={this.props.options.chip_alignment}><h6>{this.props.options.tablechip}</h6></Badge>
+        <Badge variant="info" className="table-chip" id = {this.props.chipid}><h6>{this.props.options.bet}</h6></Badge>
       </div>
-
     );
   }
 };
 
 
 function createPlayerlist(players) {
-
     let playerlist = []; 
+    var dict = {
+      0: "zero",
+      1: "one",
+      2: "two",
+      3: "three",
+      4: "four",
+      5: "five",
+      6: "six",
+      7: "seven",
+      8: "eight",
+    }
     for (var i = 0; i <= 8; i++){
-      playerlist.push(<Player options={players[i]}/>);
+      playerlist.push(<Player options={players[i]} playerid={dict[i]+"player"} chipid= {dict[i]+"chip"} />);
     }
     return playerlist;
 }
 
-
-class PotDisplay extends React.Component{
-  render () {
-    return (
-        <Badge variant="info" className="pot-display"><h4>6969$</h4></Badge>
-    )
-  }
-}
 
 class Card extends React.Component{
   render () {
     return (
     <div class ="card-wrapper">
       <div class = "card bg-secondary mx-1">
-        <img src={"./cards/CARDBACK.svg"} class="card-image card-back"></img>
-        <img src={"./cards/" + this.props.card} class="card-image card-front"></img>
+        <img src={"./cards/hd.svg"} class="card-image card-back"></img>
+        <img src={"./cards/" + this.props.card + ".svg"} class="card-image card-front"></img>
       </div>
     </div>
-    )
-  }
-}
-
-class TableChips extends React.Component {
-  render () {
-    return (
-      <Badge variant="info" className="table-chip"><h6>6969$</h6></Badge>
     )
   }
 }
@@ -91,17 +93,18 @@ class TableChips extends React.Component {
 
 class PokerTable extends React.Component{
   render () {
+
     return (
       <div class="col-9 m-auto table" style={{height:"100%"}}>
         {/* Inside table */}
-        <PotDisplay />
-        <div class="board-cards">
-          <Card card="10C.svg"></Card>
-          <Card card="2C.svg"></Card>
-          <Card card="3C.svg"></Card>
-          <Card card="4C.svg"></Card>
-          <Card card="5C.svg"></Card>
-        </div>
+        <Badge variant="info" className="pot-display"><h4>{this.props.game.pot}</h4></Badge>
+          <div class="board-cards">
+            <Card card= {this.props.game.card1}></Card>
+            <Card card= {this.props.game.card2}></Card>
+            <Card card= {this.props.game.card3}></Card>
+            <Card card= {this.props.game.card4}></Card>
+            <Card card= {this.props.game.card5}></Card>
+          </div>
       </div>
     )
   }
@@ -122,6 +125,33 @@ class ControlBox extends React.Component{
 
 
 class WholeBoard extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      game : {
+        currentPlayer: 0,
+        currentDealer: 0,
+        pot: 0, 
+        currentBet: 0,
+        card1: "3d",
+        card2: "4s",
+        card3: "4d",
+        card4: "4c",
+        card5: "4h",
+        players: [
+          {isSeated: true, name: "user0", card1: "Ah", card2: "Ad", chips: 500, bet: 1},
+          {isSeated: true, name: "user1", card1: "Kd", card2: "Kc", chips: 500, bet: 2},
+          {isSeated: true, name: "user2", card1: "Ks", card2: "Ac", chips: 500, bet: 3},
+          {isSeated: true, name: "user3", card1: "Qc", card2: "Qd", chips: 500, bet: 4},
+          {isSeated: true, name: "user4", card1: "Qs", card2: "Qh", chips: 500, bet: 5},
+          {isSeated: true, name: "user5", card1: "Jd", card2: "Js", chips: 500, bet: 6},
+          {isSeated: true, name: "user6", card1: "Jh", card2: "Jc", chips: 500, bet: 7},
+          {isSeated: true, name: "user7", card1: "2c", card2: "2d", chips: 500, bet: 8},
+          {isSeated: true, name: "user8", card1: "em", card2: "2h", chips: 500, bet: 9},
+        ]
+      }
+    }
+  }
   render() {
     return (
        <div class = "overall">
@@ -130,8 +160,8 @@ class WholeBoard extends React.Component{
               <div class="col-10 m-auto bg-success"></div>
             </Row>
             <Row class = "board-container m-auto bg-white" style={{height:"40vh"}}>
-              <PokerTable players={this.props.players}/>
-              {createPlayerlist(this.props.players)}
+              <PokerTable game={this.state.game}/>
+              {createPlayerlist(this.state.game.players)}
             </Row>
             <Row class = "board-container m-auto bg-white" style={{height:"35vh"}}>
               <ControlBox />
@@ -143,38 +173,8 @@ class WholeBoard extends React.Component{
 };
 
 const App = () => (
-  <WholeBoard players={PLAYERS}/>
+  <WholeBoard />
 );
 
-
-const PLAYERS = [
-  {seat: "1", alignment:{left: "50%", top: "78%"}, username: "user1", chips: 69, chip_alignment: {left: "50%", top: "60%"}, tablechip: 1},
-  {seat: "2", alignment:{left: "32%", top: "78%"}, username: "user2", chips: 69, chip_alignment: {left: "35%", top: "60%"}, tablechip: 2},
-  {seat: "3", alignment:{left: "20%", top: "56%"}, username: "user3", chips: 69, chip_alignment: {left: "31%", top: "52%"}, tablechip: 3},
-  {seat: "4", alignment:{left: "20%", top: "30%"}, username: "user4", chips: 69, chip_alignment: {left: "31%", top: "35%"}, tablechip: 4},
-  {seat: "5", alignment:{left: "38%", top: "11%"}, username: "user5", chips: 69, chip_alignment: {left: "35%", top: "30%"}, tablechip: 5},
-  {seat: "6", alignment:{left: "62%", top: "11%"}, username: "user6", chips: 69, chip_alignment: {left: "65%", top: "30%"}, tablechip: 6},
-  {seat: "7", alignment:{left: "80%", top: "30%"}, username: "user7", chips: 69, chip_alignment: {left: "69%", top: "35%"}, tablechip: 7},
-  {seat: "8", alignment:{left: "80%", top: "56%"}, username: "user8", chips: 69, chip_alignment: {left: "69%", top: "52%"}, tablechip: 8},
-  {seat: "9", alignment:{left: "68%", top: "78%"}, username: "user9", chips: 69, chip_alignment: {left: "65%", top: "60%"}, tablechip: 9},
-];
-
-
-/*
-var GAME = {
-  gameid: 1,
-  playerobj: [
-    {seat: "1", alignment:{left: "50%", top: "78%"}, username: "user1", chips: 69, chip_alignment: {left: "50%", top: "60%"}, tablechip: 1},
-    {seat: "2", alignment:{left: "32%", top: "78%"}, username: "user2", chips: 69, chip_alignment: {left: "35%", top: "60%"}, tablechip: 2},
-    {seat: "3", alignment:{left: "20%", top: "56%"}, username: "user3", chips: 69, chip_alignment: {left: "31%", top: "52%"}, tablechip: 3},
-    {seat: "4", alignment:{left: "20%", top: "30%"}, username: "user4", chips: 69, chip_alignment: {left: "31%", top: "35%"}, tablechip: 4},
-    {seat: "5", alignment:{left: "38%", top: "11%"}, username: "user5", chips: 69, chip_alignment: {left: "35%", top: "30%"}, tablechip: 5},
-    {seat: "6", alignment:{left: "62%", top: "11%"}, username: "user6", chips: 69, chip_alignment: {left: "65%", top: "30%"}, tablechip: 6},
-    {seat: "7", alignment:{left: "80%", top: "30%"}, username: "user7", chips: 69, chip_alignment: {left: "69%", top: "35%"}, tablechip: 7},
-    {seat: "8", alignment:{left: "80%", top: "56%"}, username: "user8", chips: 69, chip_alignment: {left: "69%", top: "52%"}, tablechip: 8},
-    {seat: "9", alignment:{left: "68%", top: "78%"}, username: "user9", chips: 69, chip_alignment: {left: "65%", top: "60%"}, tablechip: 9},
-  ]
-}
-*/
 
 export default App; 
