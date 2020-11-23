@@ -25,9 +25,14 @@
       function bet() {
         gameRoom.send("bet", document.getElementById("bet").value);
       }
+
+      function start() {
+        gameRoom.send("start");
+      }
     </script>
     <input id="bet" />
     <button onclick="bet()">Send fat bet</button>
+    <button onclick="start()">Start game</button>
     <h1 id="pot">1</h1>
   </body>
 </html>

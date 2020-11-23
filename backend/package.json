@@ -5,7 +5,7 @@
   "description": "npm init template for bootstrapping an empty Colyseus project",
   "main": "lib/index.js",
   "scripts": {
-    "dev": "ts-node-dev src/index.ts"
+    "dev": "nodemon src/index.ts"
   },
   "author": "",
   "license": "UNLICENSED",
@@ -16,8 +16,9 @@
   "devDependencies": {
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.1",
+    "@types/lodash": "^4.14.165",
+    "nodemon": "^2.0.6",
     "ts-node": "^8.1.0",
-    "ts-node-dev": "^1.0.0-pre.63",
     "typescript": "^3.4.5"
   },
   "dependencies": {
@@ -25,6 +26,8 @@
     "colyseus": "^0.14.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
-    "express-jwt": "^5.3.1"
+    "express-jwt": "^5.3.1",
+    "lodash": "^4.17.20",
+    "pokersolver": "^2.1.4"
   }
 }

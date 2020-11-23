@@ -2,20 +2,20 @@ import { Schema, type } from "@colyseus/schema";
 
 export class PokerPlayer extends Schema {
   @type("boolean")
-  isSeated: boolean = false;
+  isSeated: boolean = true;
 
   @type("string")
   name: string = "";
 
   @type("string")
-  card1: string = "QH";
+  card1: string = "Qh";
 
   @type("string")
-  card2: string = "KH";
+  card2: string = "Kh";
 
   @type("number")
   chips: number = 120;
 
   @type("number")
-  bet: number = 3;
+  bet: number = 0;
 }
