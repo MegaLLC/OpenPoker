@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -6,12 +6,13 @@ import Badge from "react-bootstrap/Badge";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import RangeSlider from 'react-bootstrap-range-slider';
+import RangeSlider from "react-bootstrap-range-slider";
 
 import * as Colyseus from "colyseus.js";
+import { Card } from "./components/Card";
+import { createPlayerlist } from "./components/Player";
 
 import "./App.css";
-import "./Card.css";
 
 /*
 React Component Layout
@@ -41,57 +42,6 @@ WholeBoard
 */
 
 // if cards empty conditionally render nothing.
-class Player extends React.Component {
-  render() {
-    return (
-      <div>
-        <div class="player bg-info" id={this.props.playerid}>
-          <div class="board-cards-hand">
-            <Card card={this.props.options.card1}></Card>
-            <Card card={this.props.options.card2}></Card>
-          </div>
-          <h5>{this.props.options.username}</h5>
-          <h6>{this.props.options.chips}</h6>
-        </div>
-        <Badge variant="info" className="table-chip" id={this.props.chipid}>
-          <h6>{this.props.options.bet}</h6>
-        </Badge>
-      </div>
-    );
-  }
-}
-
-function createPlayerlist(players) {
-  let playerlist = [];
-  var dict = {
-    0: "zero",
-    1: "one",
-    2: "two",
-    3: "three",
-    4: "four",
-    5: "five",
-    6: "six",
-    7: "seven",
-    8: "eight",
-  };
-  for (var i = 0; i <= 8; i++) {
-    playerlist.push(<Player options={players[i]} playerid={dict[i] + "player"} chipid={dict[i] + "chip"} />);
-  }
-  return playerlist;
-}
-
-class Card extends React.Component {
-  render() {
-    return (
-      <div class="card-wrapper">
-        <div class="card bg-secondary mx-1">
-          <img src={"./cards/hd.svg"} class="card-image card-back"></img>
-          <img src={"./cards/" + this.props.card + ".svg"} class="card-image card-front"></img>
-        </div>
-      </div>
-    );
-  }
-}
 
 class PokerTable extends React.Component {
   render() {
@@ -114,25 +64,20 @@ class PokerTable extends React.Component {
 }
 
 const SliderWithInputFormControl = () => {
-
-  const [ value, setValue ] = React.useState(25);
+  const [value, setValue] = React.useState(25);
 
   return (
     <Form>
       <Form.Group as={Row}>
         <Col xs="3">
-          <Form.Control value={value}/>
+          <Form.Control value={value} />
         </Col>
         <Col xs="9">
-          <RangeSlider
-            value={value}
-            onChange={e => setValue(e.target.value)}
-          />
+          <RangeSlider value={value} onChange={(e) => setValue(e.target.value)} />
         </Col>
       </Form.Group>
     </Form>
   );
-
 };
 
 // prettier-ignore
