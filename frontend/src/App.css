@@ -73,8 +73,8 @@
 
 #bottomRight{
     position: absolute;
-    right: 0px;
-    bottom: 0px;    
+    right: 15px;
+    bottom: 15px;    
 }
 
 #zeroplayer{
@@ -165,4 +165,13 @@
 #eightchip{
   left: 65%;
   top: 60%;
+}
+
+
+.btn-group.special {
+  display: flex;
+}
+
+.special .btn {
+  flex: 1
 }

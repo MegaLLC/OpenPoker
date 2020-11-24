@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import RangeSlider from 'react-bootstrap-range-slider';
 
 import * as Colyseus from "colyseus.js";
 
@@ -110,14 +113,55 @@ class PokerTable extends React.Component {
   }
 }
 
+const SliderWithInputFormControl = () => {
+
+  const [ value, setValue ] = React.useState(25);
+
+  return (
+    <Form>
+      <Form.Group as={Row}>
+        <Col xs="3">
+          <Form.Control value={value}/>
+        </Col>
+        <Col xs="9">
+          <RangeSlider
+            value={value}
+            onChange={e => setValue(e.target.value)}
+          />
+        </Col>
+      </Form.Group>
+    </Form>
+  );
+
+};
+
 // prettier-ignore
 class ControlBox extends React.Component {
+  state = {
+    raisebar: false,
+    value: 0
+  }
+
+  toggleRaiseBar = () => {
+    this.setState (prevState =>({
+      raisebar: !prevState.raisebar
+    }))
+  }
+
   render() {
+    const renderRaiseBar = () =>{
+      if (this.state.raisebar){
+        return <SliderWithInputFormControl />
+      }
+    }
     return (
       <div id="bottomRight">
-        <Button variant="primary" onClick={() => this.props.click()}>Fold</Button>{" "}
-        <Button variant="secondary">Call</Button>{" "}
-        <Button variant="success">Raise</Button>{" "}
+          {renderRaiseBar()}
+          <div class = "btn-group special">
+            <Button variant="primary" onClick={() => this.props.click()}>Fold</Button>
+            <Button variant="secondary">Call</Button>
+            <Button variant="success" onClick = {this.toggleRaiseBar}>Raise</Button>
+          </div>
       </div>
     );
   }
