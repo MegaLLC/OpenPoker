@@ -40,3 +40,8 @@ export function newHand(state: PokerState) {
 
   state.currentBet = state.bigBlind;
 }
+
+
+export function foldHand(state: PokerState) {
+
+}

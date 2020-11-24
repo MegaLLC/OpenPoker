@@ -1,6 +1,6 @@
 import { Room, Client } from "colyseus";
 import { PokerState } from "./schema/PokerState";
-import { newHand } from "./PokerLogic";
+import { newHand, foldHand } from "./PokerLogic";
 
 export class PokerRoom extends Room<PokerState> {
   onCreate(options: any) {
@@ -15,8 +15,14 @@ export class PokerRoom extends Room<PokerState> {
       console.log(client.id + " said " + message);
       newHand(this.state);
     });
+
+    this.onMessage("fold", (client, message) => {
+      console.log(client.id + " folded");
+      foldHand(this.state);
+    });
   }
 
+  // TODO change this to fire when a client joins the game room, which should be a status request
   onJoin(client: Client, options: any) {}
 
   onLeave(client: Client, consented: boolean) {}

@@ -3,11 +3,10 @@ import { PokerState } from "./schema/PokerState";
 
 // gets next player
 function getNextPlayer(state: PokerState, currentPlayer: number): number {
-  currentPlayer++;
-  while (!state.players[currentPlayer].isSeated) {
+  do {
     currentPlayer++;
     currentPlayer %= 9;
-  }
+  } while (!state.players[currentPlayer].isSeated)
   return currentPlayer;
 }
 

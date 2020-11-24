@@ -8,6 +8,9 @@ export class PokerPlayer extends Schema {
   name: string = "";
 
   @type("string")
+  clientID: string = "";
+
+  @type("string")
   card1: string = "Qh";
 
   @type("string")
