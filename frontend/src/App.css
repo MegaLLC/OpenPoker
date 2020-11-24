@@ -13,8 +13,8 @@
 
 .board-cards {
   display: flex;
-  width: 60%;
-  height: 100%;
+  width: 56%;
+  height: 35%;
   align-items: center;
   border: none;
   justify-content: center;

@@ -8,8 +8,8 @@
 .player {
   position: absolute;
   display: block;
-  width: 200px;
-  height: 130px;
+  width: 80px;
+  height: 52px;
   transform: translate(-50%, -50%);
   border-radius: 10px;
   color: white;
@@ -36,6 +36,38 @@
   width: 3%;
   height: 3%;
   transform: translate(-50%, -50%);
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  .player {
+    width: 90px;
+    height: 54px;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .player {
+    width: 130px;
+    height: 80px;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .player {
+    width: 170px;
+    height: 106px;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .player {
+    width: 200px;
+    height: 130px;
+  }
 }
 
 #zeroplayer {
