@@ -11,6 +11,11 @@
   transform: perspective(1000px);
   transform-style: preserve-3d;
   transition: all 0.7s linear;
+  width: 85px;
+  height: calc(85px * 1.39);
+  position: relative;
+  border: 3px solid black;
+  border-radius: 10px;
 }
 
 .card-back,
@@ -25,4 +30,8 @@
 
 .card-back {
   transform: rotateY(180deg);
+}
+
+.card-image {
+  height: 100%;
 }

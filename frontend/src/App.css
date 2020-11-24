@@ -1,46 +1,22 @@
-.overall{
-  background-color:#191b1c;
+.overall {
+  background-color: #191b1c;
 }
 
 .table {
   display: flex;
-  border: 6px solid 	#606060;
+  border: 6px solid #606060;
   border-radius: 180px;
   background: #35654d;
   align-items: center;
   justify-content: center;
 }
 
-.player {
-	position: absolute;
-	display: block;
-	width: 200px;
-	height: 130px;
-  transform: translate(-50%, -50%);
-  border-radius : 10px;
-  color:white;
-  text-align: center;
-  text-emphasis: bold;
-}
-
 .table-chip {
   position: absolute;
-	display: block;
+  display: block;
   width: 3%;
   height: 3%;
   transform: translate(-50%, -50%);
-}
-
-.card {
-	width: 85px;
-	height: calc(85px * 1.39);
-	position: relative;
-  border: 3px solid black;
-  border-radius: 10px;
-}
-
-.card-image{
-  height: 100%;
 }
 
 .board-cards {
@@ -63,7 +39,7 @@
 
 .pot-display {
   position: absolute;
-	display: block;
+  display: block;
   width: 20%;
   height: 10%;
   left: 50%;
@@ -71,107 +47,16 @@
   transform: translate(-50%, -50%);
 }
 
-#bottomRight{
-    position: absolute;
-    right: 15px;
-    bottom: 15px;    
+#bottomRight {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
 }
-
-#zeroplayer{
-  left: 50%;
-  top: 78%;
-}
-
-#oneplayer{
-  left: 32%; 
-  top: 78%;
-}
-
-#twoplayer{
-  left: 20%;
-  top: 56%;
-}
-
-#threeplayer{
-  left: 20%;
-  top: 30%;
-}
-
-#fourplayer{
-  left: 38%;
-  top: 11%;
-}
-
-#fiveplayer{
-  left: 62%;
-  top: 11%;
-}
-
-#sixplayer{
-  left: 80%;
-  top: 30%;
-}
-
-#sevenplayer{
-  left: 80%;
-  top: 56%;
-}
-
-#eightplayer{
-  left: 68%;
-  top: 78%;
-}
-
-#zerochip{
-  left: 50%;
-  top: 60%;
-}
-
-#onechip{
-  left: 35%;
-  top: 60%;
-}
-
-#twochip{
-  left: 31%;
-  top: 52%;
-}
-
-#threechip{
-  left: 31%;
-  top: 35%;
-}
-
-#fourchip{
-  left: 35%;
-  top: 30%;
-}
-
-#fivechip{
-  left: 65%;
-  top: 30%;
-}
-
-#sixchip{
-  left: 69%;
-  top: 35%;
-}
-
-#sevenchip{
-  left: 69%;
-  top: 52%;
-}
-
-#eightchip{
-  left: 65%;
-  top: 60%;
-}
-
 
 .btn-group.special {
   display: flex;
 }
 
 .special .btn {
-  flex: 1
+  flex: 1;
 }

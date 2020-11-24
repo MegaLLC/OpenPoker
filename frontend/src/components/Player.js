@@ -7,28 +7,33 @@ import "./Player.css";
 
 export class Player extends React.Component {
   render() {
+    let state = this.props.remoteState;
+    let playerState = state.players[this.props.index];
+    let isDealer = this.props.index === state.currentDealer;
+
     return (
       <div>
-        <div class="player bg-info" id={this.props.playerid}>
-          <div class="board-cards-hand">
-            <Card card={this.props.options.card1}></Card>
-            <Card card={this.props.options.card2}></Card>
+        <div className="player bg-info" id={this.props.playerid}>
+          <div className="board-cards-hand">
+            <Card card={playerState.card1}></Card>
+            <Card card={playerState.card2}></Card>
           </div>
-          <h5>{this.props.options.username}</h5>
-          <h6>{this.props.options.chips}</h6>
-          <Badge variant="success" className="dealer">
-            <h6 class="my-0">D</h6>
+          <h5>{playerState.username}</h5>
+          <h6>{playerState.chips}</h6>
+          {/* Dealer Button */}
+          <Badge variant="warning" className="dealer" style={{ visibility: isDealer ? "visible" : "hidden" }}>
+            <h5 className="my-0">D</h5>
           </Badge>
         </div>
         <Badge variant="info" className="table-chip" id={this.props.chipid}>
-          <h6>{this.props.options.bet}</h6>
+          <h6>{playerState.bet}</h6>
         </Badge>
       </div>
     );
   }
 }
 
-export function createPlayerlist(players) {
+export function createPlayerlist(remoteState) {
   let playerlist = [];
   var dict = {
     0: "zero",
@@ -42,7 +47,9 @@ export function createPlayerlist(players) {
     8: "eight",
   };
   for (var i = 0; i <= 8; i++) {
-    playerlist.push(<Player options={players[i]} playerid={dict[i] + "player"} chipid={dict[i] + "chip"} />);
+    playerlist.push(
+      <Player remoteState={remoteState} index={i} playerid={dict[i] + "player"} chipid={dict[i] + "chip"} />
+    );
   }
   return playerlist;
 }

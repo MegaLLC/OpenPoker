@@ -46,12 +46,12 @@ WholeBoard
 class PokerTable extends React.Component {
   render() {
     return (
-      <div class="col-9 m-auto table" style={{ height: "100%" }}>
+      <div className="col-9 m-auto table" style={{ height: "100%" }}>
         {/* Inside table */}
         <Badge variant="info" className="pot-display">
           <h4>{this.props.game.pot}</h4>
         </Badge>
-        <div class="board-cards">
+        <div className="board-cards">
           <Card card={this.props.game.card1}></Card>
           <Card card={this.props.game.card2}></Card>
           <Card card={this.props.game.card3}></Card>
@@ -102,7 +102,7 @@ class ControlBox extends React.Component {
     return (
       <div id="bottomRight">
           {renderRaiseBar()}
-          <div class = "btn-group special">
+          <div className="btn-group special">
             <Button variant="primary" onClick={() => this.props.click()}>Fold</Button>
             <Button variant="secondary">Call</Button>
             <Button variant="success" onClick = {this.toggleRaiseBar}>Raise</Button>
@@ -154,22 +154,21 @@ class WholeBoard extends React.Component {
   }
 
   cc() {
-    console.log("yo");
     this.gameRoom.send("start");
   }
 
   render() {
     return (
-      <div class="overall">
+      <div className="overall">
         <Container>
-          <Row class="board-container bg-info" style={{ height: "25vh" }}>
-            <div class="col-10 m-auto bg-success"></div>
+          <Row style={{ height: "25vh" }}>
+            <div className="col-10 m-auto bg-success"></div>
           </Row>
-          <Row class="board-container m-auto bg-white" style={{ height: "40vh" }}>
+          <Row style={{ height: "40vh" }}>
             <PokerTable game={this.state.game} />
-            {createPlayerlist(this.state.game.players)}
+            {createPlayerlist(this.state.game)}
           </Row>
-          <Row class="board-container m-auto bg-white" style={{ height: "35vh" }}>
+          <Row style={{ height: "35vh" }}>
             <ControlBox click={() => this.cc()} />
           </Row>
         </Container>

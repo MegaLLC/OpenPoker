@@ -4,10 +4,10 @@ import "./Card.css";
 export class Card extends React.Component {
   render() {
     return (
-      <div class="card-wrapper">
-        <div class="card bg-secondary mx-1">
-          <img src={"./cards/hd.svg"} class="card-image card-back" alt=""></img>
-          <img src={"./cards/" + this.props.card + ".svg"} class="card-image card-front" alt=""></img>
+      <div className="card-wrapper">
+        <div className="card bg-secondary mx-1">
+          <img src={"./cards/hd.svg"} className="card-image card-back" alt=""></img>
+          <img src={"./cards/" + this.props.card + ".svg"} className="card-image card-front" alt=""></img>
         </div>
       </div>
     );
