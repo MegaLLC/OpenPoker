@@ -9,9 +9,11 @@ import "./Player.css";
 export class Player extends React.Component {
   render() {
     let state = this.props.remoteState;
-    let playerState = state.players[this.props.index];
-    let isDealer = this.props.index === state.currentDealer;
+    let gameState = state.game;
+    let playerState = gameState.players[this.props.index];
+    let isDealer = this.props.index === gameState.currentDealer;
     let isSeated = playerState.isSeated;
+    console.log(playerState);
 
     return (
       <div>
@@ -30,7 +32,12 @@ export class Player extends React.Component {
           </div>
         ) : (
           <div className="player bg-info d-flex justify-content-center" id={this.props.playerid}>
-            <Button className="join-button bg-success align-self-center">Join Game</Button>
+            <Button
+              className="join-button bg-success align-self-center"
+              onClick={() => state.room.send("sit", this.props.index)}
+            >
+              Join Game
+            </Button>
           </div>
         )}
         <Badge variant="info" className="table-chip" id={this.props.chipid}>

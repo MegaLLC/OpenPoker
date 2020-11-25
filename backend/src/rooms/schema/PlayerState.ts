@@ -2,7 +2,7 @@ import { Schema, type } from "@colyseus/schema";
 
 export class PokerPlayer extends Schema {
   @type("boolean")
-  isSeated: boolean = true;
+  isSeated: boolean = false;
 
   @type("string")
   name: string = "";
@@ -11,13 +11,13 @@ export class PokerPlayer extends Schema {
   clientID: string = "";
 
   @type("string")
-  card1: string = "Qh";
+  card1: string = "EM";
 
   @type("string")
-  card2: string = "Kh";
+  card2: string = "EM";
 
   @type("number")
-  chips: number = 120;
+  chips: number = 200;
 
   @type("number")
   bet: number = 0;

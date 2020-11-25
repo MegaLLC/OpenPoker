@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import * as PH from "./PokerHelper";
 
 export function newHand(state: PokerState) {
-  // distribute cards and reset board. 
+  // distribute cards and reset board.
   let deck = _.shuffle(DECK);
   state.card1 = deck[1];
   state.card2 = deck[2];
@@ -39,9 +39,4 @@ export function newHand(state: PokerState) {
   state.pot += state.bigBlind;
 
   state.currentBet = state.bigBlind;
-}
-
-
-export function foldHand(state: PokerState) {
-
 }

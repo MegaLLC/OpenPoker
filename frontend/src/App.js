@@ -88,7 +88,7 @@ class WholeBoard extends React.Component {
             </Row>
             <Row style={{ height: "40vh" }}>
               <PokerTable game={this.state.game} />
-              {createPlayerlist(this.state.game)}
+              {createPlayerlist(this.state)}
             </Row>
             <Row style={{ height: "35vh" }}>
               <ControlBox room={this.state.room} />
