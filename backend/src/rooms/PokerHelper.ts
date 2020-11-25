@@ -2,11 +2,11 @@ import { PokerPlayer } from "./schema/PlayerState";
 import { PokerState } from "./schema/PokerState";
 
 // gets next player
-function getNextPlayer(state: PokerState, currentPlayer: number): number {
+export function getNextPlayer(state: PokerState, currentPlayer: number): number {
   do {
     currentPlayer++;
     currentPlayer %= 9;
-  } while (!state.players[currentPlayer].isSeated)
+  } while (!state.players[currentPlayer].isSeated);
   return currentPlayer;
 }
 

@@ -13,17 +13,18 @@ export class Player extends React.Component {
     let playerState = gameState.players[this.props.index];
     let isDealer = this.props.index === gameState.currentDealer;
     let isSeated = playerState.isSeated;
+    let isTurn = this.props.index === gameState.currentPlayer;
     console.log(playerState);
 
     return (
       <div>
         {isSeated ? (
-          <div className="player bg-info" id={this.props.playerid}>
+          <div className={`player ${isTurn ? "bg-warning" : "bg-info"}`} id={this.props.playerid}>
             <div className="board-cards-hand">
               <Card card={playerState.card1}></Card>
               <Card card={playerState.card2}></Card>
             </div>
-            <h5>{playerState.username}</h5>
+            <h5>{playerState.name}</h5>
             <h6>{playerState.chips}</h6>
             {/* Dealer Button */}
             <Badge variant="warning" className="dealer" style={{ visibility: isDealer ? "visible" : "hidden" }}>

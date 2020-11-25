@@ -46,6 +46,10 @@ export class ControlBox extends React.Component {
     room.send("bet", 0);
   }
 
+  fold(room) {
+    room.send("fold");
+  }
+
   render() {
     const renderRaiseBar = () =>{
       if (this.state.raisebar){
@@ -56,8 +60,8 @@ export class ControlBox extends React.Component {
       <div id="bottomRight">
           {renderRaiseBar()}
           <div className="btn-group special">
-            <Button variant="primary" onClick={() => this.startGame(this.props.room)}>Fold</Button>
-            <Button variant="secondary">Call</Button>
+            <Button variant="primary" onClick={() => this.fold(this.props.room)}>Fold</Button>
+            <Button variant="secondary" onClick={() => this.startGame(this.props.room)}>Call</Button>
             <Button variant="success" onClick = {this.toggleRaiseBar}>Raise</Button>
           </div>
       </div>

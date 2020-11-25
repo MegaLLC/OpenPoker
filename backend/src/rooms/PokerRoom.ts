@@ -2,6 +2,8 @@ import { Room, Client } from "colyseus";
 import { PokerState } from "./schema/PokerState";
 import { newHand } from "./PokerLogic";
 import { PokerPlayer } from "./schema/PlayerState";
+import { parseSeat } from "./RoomHelper";
+import { foldPlayer } from "./PokerPlayerLogic";
 
 export class PokerRoom extends Room<PokerState> {
   idToSeat: Map<string, number> = new Map();
@@ -20,15 +22,17 @@ export class PokerRoom extends Room<PokerState> {
     });
 
     this.onMessage("fold", (client, message) => {
-      console.log(client.id + " folded");
+      // is their turn
+      if (!(this.state.currentPlayer === this.idToSeat[client.id])) return false;
+      foldPlayer(this.state, this.idToSeat[client.id]);
     });
 
     this.onMessage("sit", (client, message) => {
-      console.log(client.id + " sat in seat " + message);
-      let requestSeat = Number(message);
+      let requestSeat = parseSeat(message);
       if (requestSeat === NaN) return false;
-      if (requestSeat > 8 || requestSeat < 0) return false;
+      // seat is empty
       if (this.state.players[requestSeat].isSeated) return false;
+      // not sitting else where
       for (let i = 0; i < this.state.players.length; i++) {
         if (this.state.players[i].clientID === client.id) return false;
       }
@@ -36,7 +40,7 @@ export class PokerRoom extends Room<PokerState> {
       let newPlayer = this.state.players[requestSeat];
       newPlayer.clientID = client.id;
       newPlayer.isSeated = true;
-      newPlayer.name = "Joe";
+      newPlayer.name = client.id;
     });
   }
 

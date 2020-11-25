@@ -23,8 +23,8 @@ export function newHand(state: PokerState) {
   // set roles
   state.street = Streets.PREFLOP;
   state.currentDealer = PH.getNextDealer(state);
-  state.firstPlayer = PH.getFirstPlayer(state);
-  state.currentPlayer = state.firstPlayer;
+  state.lastPlayer = PH.getFirstPlayer(state);
+  state.currentPlayer = state.lastPlayer;
 
   // blinds
   // TODO edge case when players are unable to post blinds

@@ -13,7 +13,7 @@ export class PokerState extends Schema {
   currentPlayer: number = 0;
 
   @type("number")
-  firstPlayer: number = 0;
+  lastPlayer: number = 0;
 
   @type("number")
   currentDealer: number = 0;
