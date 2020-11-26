@@ -3,13 +3,13 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
-import Col from "react-bootstrap/Col";
-
-import * as Colyseus from "colyseus.js";
+import Button from "react-bootstrap/Button";
 
 import { Card } from "./components/Card";
 import { createPlayerlist } from "./components/Player";
 import { ControlBox } from "./components/ControlBox";
+
+import { Network } from "./helpers/Networking";
 
 import "./App.css";
 
@@ -48,14 +48,14 @@ class PokerTable extends React.Component {
       <div className="col-9 m-auto table" style={{ height: "100%" }}>
         {/* Inside table */}
         <Badge variant="info" className="pot-display">
-          <h4>{this.props.game.pot}</h4>
+          <h4>{this.props._.game.pot}</h4>
         </Badge>
         <div className="board-cards">
-          <Card card={this.props.game.card1}></Card>
-          <Card card={this.props.game.card2}></Card>
-          <Card card={this.props.game.card3}></Card>
-          <Card card={this.props.game.card4}></Card>
-          <Card card={this.props.game.card5}></Card>
+          <Card card={this.props._.game.card1}></Card>
+          <Card card={this.props._.game.card2}></Card>
+          <Card card={this.props._.game.card3}></Card>
+          <Card card={this.props._.game.card4}></Card>
+          <Card card={this.props._.game.card5}></Card>
         </div>
       </div>
     );
@@ -65,37 +65,30 @@ class PokerTable extends React.Component {
 class WholeBoard extends React.Component {
   constructor() {
     super();
-
-    this.colyseus = new Colyseus.Client("ws://localhost:2567");
-
-    this.colyseus.joinOrCreate("main").then((room) => {
-      console.log(room.sessionId, "joined", room.name);
-
-      room.onStateChange((state) => {
-        console.log(room.name, "has new state:", state);
-        this.setState({ game: room.state, room: room });
-      });
-    });
+    new Network(this.setState.bind(this));
   }
 
   render() {
-    return (
-      this.state && (
-        <div className="overall">
-          <Container>
-            <Row style={{ height: "25vh" }}>
-              <div className="col-10 m-auto bg-success"></div>
-            </Row>
-            <Row style={{ height: "40vh" }}>
-              <PokerTable game={this.state.game} />
-              {createPlayerlist(this.state)}
-            </Row>
-            <Row style={{ height: "35vh" }}>
-              <ControlBox room={this.state.room} />
-            </Row>
-          </Container>
-        </div>
-      )
+    return this.state ? (
+      <div className="overall">
+        <Container>
+          <Row style={{ height: "25vh" }}>
+            <div className="col-10 m-auto bg-success"></div>
+          </Row>
+          <Row style={{ height: "40vh" }}>
+            <PokerTable _={this.state} />
+            {createPlayerlist(this.state)}
+          </Row>
+          <Row style={{ height: "35vh" }}>
+            <ControlBox _={this.state} />
+          </Row>
+        </Container>
+      </div>
+    ) : (
+      <div>
+        <h1>Unlucky</h1>
+        <Button>Reconnect</Button>
+      </div>
     );
   }
 }

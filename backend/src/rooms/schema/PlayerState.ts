@@ -4,6 +4,9 @@ export class PokerPlayer extends Schema {
   @type("boolean")
   isSeated: boolean = false;
 
+  @type("boolean")
+  isFolded: boolean;
+
   @type("string")
   name: string = "";
 

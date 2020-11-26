@@ -3,7 +3,7 @@ import { PokerState } from "./schema/PokerState";
 import { newHand } from "./PokerLogic";
 import { PokerPlayer } from "./schema/PlayerState";
 import { parseSeat } from "./RoomHelper";
-import { foldPlayer } from "./PokerPlayerLogic";
+import { betPlayer, foldPlayer } from "./PokerPlayerLogic";
 
 export class PokerRoom extends Room<PokerState> {
   idToSeat: Map<string, number> = new Map();
@@ -13,7 +13,9 @@ export class PokerRoom extends Room<PokerState> {
 
     this.onMessage("bet", (client, message) => {
       console.log(client.id + " has bet " + message);
-      this.state.pot += parseFloat(message);
+      let bet = Number(message);
+      if (bet === NaN) return false;
+      betPlayer(this.state, this.idToSeat[client.id], bet);
     });
 
     this.onMessage("start", (client, message) => {
@@ -27,6 +29,7 @@ export class PokerRoom extends Room<PokerState> {
       foldPlayer(this.state, this.idToSeat[client.id]);
     });
 
+    // TODO fix joining while hand is in progress
     this.onMessage("sit", (client, message) => {
       let requestSeat = parseSeat(message);
       if (requestSeat === NaN) return false;

@@ -2,6 +2,7 @@ import { PokerState } from "./schema/PokerState";
 import { Streets, DECK } from "./PokerConstants";
 import * as _ from "lodash";
 import * as PH from "./PokerHelper";
+import { getNextPlayer } from "./PokerHelper";
 
 export function newHand(state: PokerState) {
   // distribute cards and reset board.
@@ -17,6 +18,7 @@ export function newHand(state: PokerState) {
       player.card1 = deck[currentCard++];
       player.card2 = deck[currentCard++];
       player.bet = 0;
+      player.isFolded = false;
     }
   });
 
@@ -39,4 +41,9 @@ export function newHand(state: PokerState) {
   state.pot += state.bigBlind;
 
   state.currentBet = state.bigBlind;
+}
+
+export function advancePlayer(state: PokerState) {
+  state.currentPlayer = getNextPlayer(state, state.currentPlayer);
+  // maybe end street
 }

@@ -8,13 +8,11 @@ import "./Player.css";
 
 export class Player extends React.Component {
   render() {
-    let state = this.props.remoteState;
-    let gameState = state.game;
+    let gameState = this.props._.game;
     let playerState = gameState.players[this.props.index];
     let isDealer = this.props.index === gameState.currentDealer;
     let isSeated = playerState.isSeated;
     let isTurn = this.props.index === gameState.currentPlayer;
-    console.log(playerState);
 
     return (
       <div>
@@ -35,7 +33,7 @@ export class Player extends React.Component {
           <div className="player bg-info d-flex justify-content-center" id={this.props.playerid}>
             <Button
               className="join-button bg-success align-self-center"
-              onClick={() => state.room.send("sit", this.props.index)}
+              onClick={() => this.props._.net.join(this.props.index)}
             >
               Join Game
             </Button>
@@ -63,9 +61,7 @@ export function createPlayerlist(remoteState) {
     8: "eight",
   };
   for (var i = 0; i <= 8; i++) {
-    playerlist.push(
-      <Player remoteState={remoteState} index={i} playerid={dict[i] + "player"} chipid={dict[i] + "chip"} />
-    );
+    playerlist.push(<Player _={remoteState} index={i} playerid={dict[i] + "player"} chipid={dict[i] + "chip"} />);
   }
   return playerlist;
 }

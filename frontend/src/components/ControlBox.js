@@ -38,16 +38,12 @@ export class ControlBox extends React.Component {
     }))
   }
 
-  startGame(room) {
-    room.send("start");
-  }
-
-  bet(room) {
-    room.send("bet", 0);
-  }
-
-  fold(room) {
-    room.send("fold");
+  getCallorCheck = () => {
+    if (this.props._.game.currentBet > this.props._.game.players[this.props._.net.seat].bet) {
+      return "Call"
+    } else {
+      return "Check"
+    }
   }
 
   render() {
@@ -56,14 +52,20 @@ export class ControlBox extends React.Component {
         return <SliderWithInputFormControl />
       }
     }
+    const renderControlButton = () =>{
+      if (this.props._.game.currentPlayer === this.props._.net.seat){
+        return <div className="btn-group special">
+          <Button variant="danger" onClick={() => this.props._.net.startGame()}>New Hand</Button>
+          <Button variant="primary" onClick={() => this.props._.net.fold()}>Fold</Button>
+      <Button variant="secondary" onClick={() => this.props._.net.bet(this.props._.game.currentBet)}>{this.getCallorCheck()}</Button>
+          <Button variant="success" onClick = {this.toggleRaiseBar}>Raise</Button>
+        </div>
+      }
+    }
     return (
       <div id="bottomRight">
           {renderRaiseBar()}
-          <div className="btn-group special">
-            <Button variant="primary" onClick={() => this.fold(this.props.room)}>Fold</Button>
-            <Button variant="secondary" onClick={() => this.startGame(this.props.room)}>Call</Button>
-            <Button variant="success" onClick = {this.toggleRaiseBar}>Raise</Button>
-          </div>
+          {renderControlButton()}
       </div>
     );
   }
