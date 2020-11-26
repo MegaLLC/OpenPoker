@@ -1,5 +1,5 @@
-import { PokerPlayer } from "./schema/PlayerState";
-import { PokerState } from "./schema/PokerState";
+import { PokerPlayer } from "../schema/PlayerState";
+import { PokerState } from "../schema/PokerState";
 
 // gets next player at the table
 export function getNextPlayer(state: PokerState, currentPlayer: number): number {

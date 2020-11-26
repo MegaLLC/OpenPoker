@@ -1,6 +1,5 @@
-import { getNextPlayer } from "./PokerHelper";
 import { advancePlayer } from "./PokerLogic";
-import { PokerState } from "./schema/PokerState";
+import { PokerState } from "../schema/PokerState";
 
 export function foldPlayer(state: PokerState, seat: number) {
   let player = state.players[seat];

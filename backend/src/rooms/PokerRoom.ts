@@ -1,9 +1,10 @@
 import { Room, Client } from "colyseus";
 import { PokerState } from "./schema/PokerState";
-import { newHand } from "./PokerLogic";
+import { newHand } from "./logic/PokerLogic";
 import { PokerPlayer } from "./schema/PlayerState";
 import { parseSeat } from "./RoomHelper";
-import { betPlayer, foldPlayer } from "./PokerPlayerLogic";
+import { betPlayer, foldPlayer } from "./logic/PokerPlayerLogic";
+import { Streets } from "./logic/PokerConstants";
 
 export class PokerRoom extends Room<PokerState> {
   idToSeat: Map<string, number> = new Map();
