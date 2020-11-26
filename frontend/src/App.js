@@ -5,13 +5,14 @@ import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 
-import { Card } from "./components/Card";
-import { createPlayerlist } from "./components/Player";
+import Card from "./components/Card";
+import createPlayerlist from "./components/Player";
 import { ControlBox } from "./components/ControlBox";
 
 import { Network } from "./helpers/Networking";
 
 import "./App.css";
+import Col from "react-bootstrap/esm/Col";
 
 /*
 React Component Layout
@@ -42,25 +43,23 @@ WholeBoard
 
 // if cards empty conditionally render nothing.
 
-class PokerTable extends React.Component {
-  render() {
-    return (
-      <div className="col-9 m-auto table" style={{ height: "100%" }}>
-        {/* Inside table */}
-        <Badge variant="info" className="pot-display">
-          <h4>{this.props._.game.pot}</h4>
-        </Badge>
-        <div className="board-cards">
-          <Card card={this.props._.game.card1}></Card>
-          <Card card={this.props._.game.card2}></Card>
-          <Card card={this.props._.game.card3}></Card>
-          <Card card={this.props._.game.card4}></Card>
-          <Card card={this.props._.game.card5}></Card>
-        </div>
+const PokerTable = (props) => {
+  return (
+    <div className="col-9 m-auto table" style={{ height: "100%" }}>
+      {/* Inside table */}
+      <Badge variant="info" className="pot-display">
+        <h4>{props._.game.pot}</h4>
+      </Badge>
+      <div className="board-cards">
+        <Card card={props._.game.card1}></Card>
+        <Card card={props._.game.card2}></Card>
+        <Card card={props._.game.card3}></Card>
+        <Card card={props._.game.card4}></Card>
+        <Card card={props._.game.card5}></Card>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 class WholeBoard extends React.Component {
   constructor() {
@@ -69,7 +68,8 @@ class WholeBoard extends React.Component {
   }
 
   render() {
-    return this.state ? (
+    console.log(this.state);
+    return this.state && this.state.connected ? (
       <div className="overall">
         <Container>
           <Row style={{ height: "25vh" }}>
@@ -86,8 +86,18 @@ class WholeBoard extends React.Component {
       </div>
     ) : (
       <div>
-        <h1>Unlucky</h1>
-        <Button>Reconnect</Button>
+        <Container>
+          <Row className="mt-4">
+            <Col className="m-auto">
+              <h1 className="text-center">Disconnected</h1>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="m-auto d-flex justify-content-center">
+              <Button onClick={() => this.state.net.connect()}>Reconnect</Button>
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }
