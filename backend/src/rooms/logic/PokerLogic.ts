@@ -1,6 +1,7 @@
 import { PokerState } from "../schema/PokerState";
-import { Streets, DECK } from "./PokerConstants";
+import { Streets, DECK, MAX_PLAYERS } from "./PokerConstants";
 import * as _ from "lodash";
+import { Hand } from "pokersolver";
 import * as PH from "./PokerHelper";
 
 export function newHand(state: PokerState) {
@@ -58,4 +59,41 @@ function advanceStreet(state: PokerState) {
   state.currentPlayer = PH.getNextPlayer(state, state.currentDealer);
   state.currentBet = 0;
   state.lastPlayer = state.currentPlayer;
+  // end of game state
+  if (state.street == Streets.SHOWDOWN) {
+    findWinner(state);
+  }
+}
+
+export function findWinner(state: PokerState): Array<number> {
+  var board = [state.card1, state.card2, state.card3, state.card4, state.card5];
+  var currWinners = []; // indices of winners
+
+  // find winners out of all players
+  for (let i = 0; i < MAX_PLAYERS; ++i) {
+    let player = state.players[i];
+
+    // ignore players not in game
+    if (!player.isSeated || player.isFolded) continue;
+
+    // hand of current player
+    let p = Hand.solve([player.card1, player.card2, ...board]);
+
+    if (currWinners.length == 0) {
+      currWinners.push(i);
+    } else {
+      // compare hands
+      let leader = state.players[currWinners[0]];
+      let cmp = Hand.solve([leader.card1, leader.card2, ...board]).compare(p);
+      if (cmp === 1) {
+        // found a better hand, discard current winners
+        currWinners = [];
+        currWinners.push(i);
+      } else if (cmp === 0) {
+        // found an equal find, add to current winners
+        currWinners.push(i);
+      }
+    }
+  }
+  return currWinners;
 }
