@@ -26,7 +26,6 @@ function doBetPlayer(state: PokerState, seat: number, betMessage: number): boole
     // can't play on without paying
     return false;
   } else if (betMessage === state.currentBet) {
-    if (betMessage < playerCurrentBet) return false; // taking money out
     if (betMessage === playerCurrentBet) return true; // check
 
     // call
@@ -36,7 +35,7 @@ function doBetPlayer(state: PokerState, seat: number, betMessage: number): boole
     state.players[seat].bet += neededToCall;
     state.players[seat].chips -= neededToCall;
     return true;
-  } else if (betMessage > state.currentBet) {
+  } else {
     // raise
     const minRaise = state.currentBet * 2;
     if (betMessage < minRaise) return false;

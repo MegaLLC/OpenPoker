@@ -1,4 +1,4 @@
-import { findWinner, newHand } from "./PokerLogic";
+import { advancePlayer, findWinner, newHand } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
@@ -73,7 +73,35 @@ describe("newHand() tests", () => {
 });
 
 describe("advancePlayer() tests", () => {
-  // test();
+  test("Street doesn't end", () => {
+    let state = new PokerState();
+    state.players[3].isSeated = true;
+    state.players[4].isSeated = true;
+    state.players[7].isSeated = true;
+    state.currentPlayer = 4;
+    state.currentDealer = 3;
+    state.lastPlayer = 3;
+    let stateCopy = state.clone();
+    stateCopy.currentPlayer = 7;
+    advancePlayer(state);
+    expect(state).toStrictEqual(stateCopy);
+  });
+
+  test("Street ends", () => {
+    let state = new PokerState();
+    state.players[3].isSeated = true;
+    state.players[4].isSeated = true;
+    state.players[7].isSeated = true;
+    state.currentPlayer = 7;
+    state.currentDealer = 3;
+    state.lastPlayer = 3;
+    let stateCopy = state.clone();
+    stateCopy.currentPlayer = 4;
+    stateCopy.lastPlayer = 4;
+    stateCopy.street = Streets.FLOP;
+    advancePlayer(state);
+    expect(state).toStrictEqual(stateCopy);
+  });
 });
 
 describe("findWinner() tests", () => {

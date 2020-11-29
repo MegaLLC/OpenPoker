@@ -19,27 +19,21 @@ export function getNextDealer(state: PokerState): number {
 
 export function getFirstPlayer(state: PokerState): number {
   // special case for heads-up poker
-  if (state.playerCount === 2) return getNextPlayer(state, state.currentDealer);
+  if (countPlayers(state) === 2) return state.currentDealer;
   return getNextPlayer(state, getBigBlind(state));
 }
 
 export function getBigBlind(state: PokerState): number {
   // special case for heads-up poker
-  if (state.playerCount === 2) return getNextPlayer(state, state.currentDealer);
+  if (countPlayers(state) === 2) return getNextPlayer(state, state.currentDealer);
   return getNextPlayer(state, getSmallBlind(state));
 }
 export function getSmallBlind(state: PokerState): number {
   // special case for heads-up poker
-  if (state.playerCount === 2) return state.currentDealer;
+  if (countPlayers(state) === 2) return state.currentDealer;
   return getNextPlayer(state, state.currentDealer);
 }
 
-export function addPlayer(state: PokerState, player: PokerPlayer, seat: number) {
-  state.playerCount++;
-  state.players[seat] = player;
-}
-
-export function removePlayer(state: PokerState, seat: number) {
-  state.playerCount--;
-  state.players[seat].isSeated = false;
+function countPlayers(state: PokerState): number {
+  return state.players.filter((p) => p.isSeated).length;
 }

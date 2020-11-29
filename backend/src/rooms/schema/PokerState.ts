@@ -7,9 +7,6 @@ export class PokerState extends Schema {
   players = new ArraySchema<PokerPlayer>();
 
   @type("number")
-  playerCount: number = 0;
-
-  @type("number")
   currentPlayer: number = 0;
 
   @type("number")
