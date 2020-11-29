@@ -1,3 +1,5 @@
+export const MAX_PLAYERS = 9;
+
 export enum Streets {
   PREFLOP = 0,
   FLOP = 1,

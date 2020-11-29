@@ -1,13 +1,15 @@
-import { PokerPlayer } from "./schema/PlayerState";
-import { PokerState } from "./schema/PokerState";
+import { PokerPlayer } from "../schema/PlayerState";
+import { PokerState } from "../schema/PokerState";
 
-// gets next player
-function getNextPlayer(state: PokerState, currentPlayer: number): number {
-  currentPlayer++;
-  while (!state.players[currentPlayer].isSeated) {
+// gets next player at the table
+export function getNextPlayer(state: PokerState, currentPlayer: number): number {
+  let rip = 0;
+  do {
+    rip++;
+    if (rip > 100) return NaN;
     currentPlayer++;
     currentPlayer %= 9;
-  }
+  } while (!(state.players[currentPlayer].isSeated || state.players[currentPlayer].isFolded));
   return currentPlayer;
 }
 
