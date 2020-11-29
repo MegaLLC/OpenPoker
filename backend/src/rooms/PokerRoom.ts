@@ -2,7 +2,7 @@ import { Room, Client } from "colyseus";
 import { PokerState } from "./schema/PokerState";
 import { newHand } from "./logic/PokerLogic";
 import { PokerPlayer } from "./schema/PlayerState";
-import { parseSeat } from "./RoomHelper";
+import { isTurn, parseSeat } from "./RoomHelper";
 import { betPlayer, foldPlayer } from "./logic/PokerPlayerLogic";
 import { Streets } from "./logic/PokerConstants";
 
@@ -14,9 +14,10 @@ export class PokerRoom extends Room<PokerState> {
 
     this.onMessage("bet", (client, message) => {
       console.log(client.id + " has bet " + message);
+      if (!isTurn(this.state, this.idToSeat, client.id)) return false;
       let bet = Number(message);
       if (bet === NaN) return false;
-      betPlayer(this.state, this.idToSeat[client.id], bet);
+      betPlayer(this.state, this.idToSeat.get(client.id), bet);
     });
 
     this.onMessage("start", (client, message) => {
@@ -25,9 +26,8 @@ export class PokerRoom extends Room<PokerState> {
     });
 
     this.onMessage("fold", (client, message) => {
-      // is their turn
-      if (!(this.state.currentPlayer === this.idToSeat[client.id])) return false;
-      foldPlayer(this.state, this.idToSeat[client.id]);
+      if (!isTurn(this.state, this.idToSeat, client.id)) return false;
+      foldPlayer(this.state, this.idToSeat.get(client.id));
     });
 
     // TODO fix joining while hand is in progress
@@ -40,7 +40,7 @@ export class PokerRoom extends Room<PokerState> {
       for (let i = 0; i < this.state.players.length; i++) {
         if (this.state.players[i].clientID === client.id) return false;
       }
-      this.idToSeat[client.id] = requestSeat;
+      this.idToSeat.set(client.id, requestSeat);
       let newPlayer = this.state.players[requestSeat];
       newPlayer.clientID = client.id;
       newPlayer.isSeated = true;
@@ -51,7 +51,8 @@ export class PokerRoom extends Room<PokerState> {
   onJoin(client: Client, options: any) {}
 
   onLeave(client: Client, consented: boolean) {
-    this.state.players[this.idToSeat[client.id]] = new PokerPlayer();
+    this.state.players[this.idToSeat.get(client.id)] = new PokerPlayer();
+    this.idToSeat.delete(client.id);
   }
 
   onDispose() {}

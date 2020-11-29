@@ -133,7 +133,7 @@ describe("findWinner() tests", () => {
 
   test("9 Players all winners", () => {
     let state = createPokerState(
-      ["As", "Ts", "Js", "Qs", "Ks"], // royal flush every body wins :)
+      ["As", "Ts", "Js", "Qs", "Ks"], // royal flush everybody wins :)
       [
         ["Ac", "9s"],
         ["Ad", "Ah"],
