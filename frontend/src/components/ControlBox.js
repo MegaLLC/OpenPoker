@@ -8,17 +8,37 @@ import Row from "react-bootstrap/Row";
 
 import "./ControlBox.css";
 
-const SliderWithInputFormControl = () => {
-  const [value, setValue] = React.useState(25);
+const SliderWithInputFormControl = (_) => {
+  const self = _.state.game.players[_.state.net.seat];
+  const minV = _.state.game.currentBet * 2;
+  const maxV = self.chips;
+  const [value, setValue] = React.useState(minV);
+  const [sliderValue, setSliderValue] = React.useState(minV);
+  let sendValue = (value) => {
+    value = Math.min(value, maxV);
+    value = Math.max(value, minV);
+    setSliderValue(value);
+    setValue(value);
+    _.valueCallback(value);
+  };
 
   return (
     <Form>
       <Form.Group as={Row}>
         <Col xs="3">
-          <Form.Control value={value} />
+          <Form.Control
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={(e) => sendValue(e.target.value)}
+          />
         </Col>
         <Col xs="9">
-          <RangeSlider value={value} onChange={(e) => setValue(e.target.value)} />
+          <RangeSlider
+            min={_.state.game.currentBet * 2}
+            max={self.chips}
+            value={sliderValue}
+            onChange={(e) => sendValue(e.target.value)}
+          />
         </Col>
       </Form.Group>
     </Form>
@@ -32,7 +52,12 @@ export class ControlBox extends React.Component {
     value: 0
   }
 
+  valueCallback = (childValue) => {this.setState({value: childValue})}
+
   toggleRaiseBar = () => {
+    if (this.state.raisebar) {
+      this.props._.net.bet(this.state.value)
+    }
     this.setState (prevState =>({
       raisebar: !prevState.raisebar
     }))
@@ -49,7 +74,7 @@ export class ControlBox extends React.Component {
   render() {
     const renderRaiseBar = () =>{
       if (this.state.raisebar){
-        return <SliderWithInputFormControl />
+        return <SliderWithInputFormControl state={this.props._} valueCallback={this.valueCallback}/>
       }
     }
     const renderControlButton = () =>{

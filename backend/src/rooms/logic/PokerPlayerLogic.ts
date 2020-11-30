@@ -42,6 +42,7 @@ function doBetPlayer(state: PokerState, seat: number, betMessage: number): boole
     state.players[seat].bet = betMessage;
     state.players[seat].chips -= amountSpent;
     state.lastPlayer = seat;
+    state.currentBet = betMessage;
     return true;
   }
 }
