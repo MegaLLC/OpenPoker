@@ -2,6 +2,12 @@ import { advancePlayer, findWinner, newHand } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
+import _ from "lodash";
+import { PokerRoom } from "../PokerRoom";
+
+let MOCK_ROOM = new PokerRoom();
+MOCK_ROOM.notifyHand = _.noop;
+MOCK_ROOM.notifyBoard = _.noop;
 
 function createPokerState(board: Array<string>, hands: Array<Array<string>>): PokerState {
   let state = new PokerState();
@@ -32,7 +38,7 @@ describe("newHand() tests", () => {
       state.players[i].isSeated = true;
       state.players[i].isFolded = false;
     }
-    newHand(state);
+    newHand(state, MOCK_ROOM);
     let cards = new Set<string>();
     cards.add(state.card1);
     cards.add(state.card2);
@@ -52,7 +58,7 @@ describe("newHand() tests", () => {
       state.players[i].isSeated = true;
       state.players[i].isFolded = true;
     }
-    newHand(state);
+    newHand(state, MOCK_ROOM);
     expect(state.players.filter((p) => p.isFolded)).toStrictEqual([]);
   });
   test("Correct roles assigned", () => {
@@ -63,12 +69,12 @@ describe("newHand() tests", () => {
     state.players[8].isSeated = true;
     state.currentPlayer = 5;
     state.currentDealer = 8;
-    newHand(state);
+    newHand(state, MOCK_ROOM);
     expect(state.currentDealer).toBe(1);
     expect(state.currentPlayer).toBe(8);
     expect(state.street).toBe(Streets.PREFLOP);
     expect(state.currentBet).toBe(state.bigBlind);
-    expect(state.pot).toBe(state.bigBlind + state.smallBlind);
+    expect(state.pot).toBe(0);
   });
 });
 
@@ -83,7 +89,7 @@ describe("advancePlayer() tests", () => {
     state.lastPlayer = 3;
     let stateCopy = state.clone();
     stateCopy.currentPlayer = 7;
-    advancePlayer(state);
+    advancePlayer(state, MOCK_ROOM);
     expect(state).toStrictEqual(stateCopy);
   });
 
@@ -99,7 +105,7 @@ describe("advancePlayer() tests", () => {
     stateCopy.currentPlayer = 4;
     stateCopy.lastPlayer = 4;
     stateCopy.street = Streets.FLOP;
-    advancePlayer(state);
+    advancePlayer(state, MOCK_ROOM);
     expect(state).toStrictEqual(stateCopy);
   });
 });

@@ -1,17 +1,19 @@
 import { advancePlayer } from "./PokerLogic";
 import { PokerState } from "../schema/PokerState";
+import { Room } from "colyseus/lib/Room";
+import { PokerRoom } from "../PokerRoom";
 
-export function foldPlayer(state: PokerState, seat: number) {
+export function foldPlayer(state: PokerState, seat: number, room: PokerRoom) {
   let player = state.players[seat];
   player.card1 = "EM";
   player.card2 = "EM";
   player.isFolded = true;
-  advancePlayer(state);
+  advancePlayer(state, room);
 }
 
-export function betPlayer(state: PokerState, seat: number, betMessage: number): boolean {
+export function betPlayer(state: PokerState, seat: number, betMessage: number, room: PokerRoom): boolean {
   const betSuccess = doBetPlayer(state, seat, betMessage);
-  if (betSuccess) advancePlayer(state);
+  if (betSuccess) advancePlayer(state, room);
   return betSuccess;
 }
 

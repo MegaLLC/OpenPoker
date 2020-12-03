@@ -1,6 +1,7 @@
 import { Schema, ArraySchema, type, filter } from "@colyseus/schema";
 import { PokerPlayer } from "./PlayerState";
 import { Streets } from "../logic/PokerConstants";
+import { nosync } from "colyseus";
 
 export class PokerState extends Schema {
   @type([PokerPlayer])
@@ -30,24 +31,19 @@ export class PokerState extends Schema {
   @type("number")
   street: Streets = Streets.PREFLOP;
 
-  @filter((_, __, root: PokerState) => root.street >= Streets.FLOP)
-  @type("string")
+  @nosync
   card1: string = "EM";
 
-  @filter((_, __, root: PokerState) => root.street >= Streets.FLOP)
-  @type("string")
+  @nosync
   card2: string = "EM";
 
-  @filter((_, __, root: PokerState) => root.street >= Streets.FLOP)
-  @type("string")
+  @nosync
   card3: string = "EM";
 
-  @filter((_, __, root: PokerState) => root.street >= Streets.TURN)
-  @type("string")
+  @nosync
   card4: string = "EM";
 
-  @filter((_, __, root: PokerState) => root.street >= Streets.RIVER)
-  @type("string")
+  @nosync
   card5: string = "EM";
 
   constructor() {
