@@ -3,8 +3,9 @@ import { Streets, DECK, MAX_PLAYERS } from "./PokerConstants";
 import * as _ from "lodash";
 import { Hand } from "pokersolver";
 import * as PH from "./PokerHelper";
+import { PokerRoom } from "../PokerRoom";
 
-export function newHand(state: PokerState) {
+export function newHand(state: PokerState, room: PokerRoom) {
   // distribute cards and reset board.
   let deck = _.shuffle(DECK);
   state.card1 = deck[1];
@@ -33,35 +34,39 @@ export function newHand(state: PokerState) {
   let small = PH.getSmallBlind(state);
   state.players[small].chips -= state.smallBlind;
   state.players[small].bet = state.smallBlind;
-  state.pot += state.smallBlind;
 
   let big = PH.getBigBlind(state);
   state.players[big].chips -= state.bigBlind;
   state.players[big].bet = state.bigBlind;
-  state.pot += state.bigBlind;
 
   state.currentBet = state.bigBlind;
+  room.notifyHand();
+  room.notifyBoard();
 }
 
-export function advancePlayer(state: PokerState) {
+export function advancePlayer(state: PokerState, room: PokerRoom) {
   state.currentPlayer = PH.getNextPlayer(state, state.currentPlayer);
   if (state.currentPlayer === state.lastPlayer) {
-    advanceStreet(state);
+    advanceStreet(state, room);
   }
 }
 
-function advanceStreet(state: PokerState) {
+function submitBets(state: PokerState) {
   state.players.forEach((p) => {
     state.pot += p.bet;
     p.bet = 0;
   });
+}
+
+function advanceStreet(state: PokerState, room: PokerRoom) {
+  submitBets(state);
   state.street++;
   state.currentPlayer = PH.getNextPlayer(state, state.currentDealer);
   state.currentBet = 0;
   state.lastPlayer = state.currentPlayer;
-  // end of game state
+  room.notifyBoard();
   if (state.street == Streets.SHOWDOWN) {
-    findWinner(state);
+    endGame(state, room);
   }
 }
 
@@ -96,4 +101,18 @@ export function findWinner(state: PokerState): Array<number> {
     }
   }
   return currWinners;
+}
+
+export function endGame(state: PokerState, room: PokerRoom): void {
+  submitBets(state);
+  const winners = findWinner(state);
+  const winnings = Math.round((state.pot * 100) / winners.length) / 100;
+  state.pot = 0;
+  winners.forEach((i) => {
+    state.players[i].chips += winnings;
+  });
+  setTimeout(() => {
+    newHand(state, room);
+  }, 5000);
+  room.notifyResults(winners);
 }

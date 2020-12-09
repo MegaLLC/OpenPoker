@@ -1,4 +1,5 @@
-import { Schema, type } from "@colyseus/schema";
+import { Schema, type, filter } from "@colyseus/schema";
+import { nosync } from "colyseus";
 
 export class PokerPlayer extends Schema {
   @type("boolean")
@@ -13,14 +14,14 @@ export class PokerPlayer extends Schema {
   @type("string")
   clientID: string = "";
 
-  @type("string")
+  @nosync
   card1: string = "EM";
 
-  @type("string")
+  @nosync
   card2: string = "EM";
 
   @type("number")
-  chips: number = 200;
+  chips: number = 2000;
 
   @type("number")
   bet: number = 0;

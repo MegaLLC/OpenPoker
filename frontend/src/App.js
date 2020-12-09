@@ -5,6 +5,8 @@ import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 
+import { ToastContainer, toast } from "react-toastify";
+
 import Card from "./components/Card";
 import createPlayerlist from "./components/Player";
 import { ControlBox } from "./components/ControlBox";
@@ -12,6 +14,7 @@ import { ControlBox } from "./components/ControlBox";
 import { Network } from "./helpers/Networking";
 
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import Col from "react-bootstrap/esm/Col";
 
 /*
@@ -71,6 +74,17 @@ class WholeBoard extends React.Component {
     console.log(this.state);
     return this.state && this.state.connected ? (
       <div className="overall">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <Container>
           <Row style={{ height: "25vh" }}>
             <div className="col-10 m-auto bg-success"></div>

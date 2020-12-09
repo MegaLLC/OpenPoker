@@ -1,4 +1,5 @@
 import { Client, Room } from "colyseus.js";
+import { toast } from "react-toastify";
 
 export class Network {
   client: Client;
@@ -24,6 +25,50 @@ export class Network {
       this.setStateCallback({ connected: false, net: this });
       this.room = undefined;
       console.log("Server has crashed -_-");
+    });
+
+    this.room!.onMessage("end_hand", (msg) => {
+      const winnerCount = msg.length;
+
+      const players = this.room!.state.players;
+      let winnerName = "";
+      if (winnerCount > 2) {
+        const playerNames: string[] = msg.map((seatNumber) => players[seatNumber].name);
+        winnerName = playerNames.slice(1).join(", ");
+        winnerName += " and " + playerNames[0];
+        winnerName += " have";
+      } else if (winnerCount === 2) {
+        winnerName = `${players[msg[0]].name} and ${players[msg[1]].name}`;
+        winnerName += " have";
+      } else {
+        winnerName = players[msg[0]].name + " has";
+      }
+      let winnerMsg = winnerName + " won the hand 🚀";
+
+      toast.info(winnerMsg, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+
+    this.room!.onMessage("cards", (msg) => {
+      this.room!.state.players[this.seat].card1 = msg.card1;
+      this.room!.state.players[this.seat].card2 = msg.card2;
+      this.setStateCallback({ connected: true, game: this.room!.state, net: this });
+    });
+
+    this.room!.onMessage("board", (msg) => {
+      this.room!.state.card1 = msg.card1;
+      this.room!.state.card2 = msg.card2;
+      this.room!.state.card3 = msg.card3;
+      this.room!.state.card4 = msg.card4;
+      this.room!.state.card5 = msg.card5;
+      this.setStateCallback({ connected: true, game: this.room!.state, net: this });
     });
   }
 

@@ -1,7 +1,13 @@
-import { findWinner, newHand } from "./PokerLogic";
+import { advancePlayer, findWinner, newHand } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
+import _ from "lodash";
+import { PokerRoom } from "../PokerRoom";
+
+let MOCK_ROOM = <PokerRoom>{};
+MOCK_ROOM.notifyHand = _.noop;
+MOCK_ROOM.notifyBoard = _.noop;
 
 function createPokerState(board: Array<string>, hands: Array<Array<string>>): PokerState {
   let state = new PokerState();
@@ -32,7 +38,7 @@ describe("newHand() tests", () => {
       state.players[i].isSeated = true;
       state.players[i].isFolded = false;
     }
-    newHand(state);
+    newHand(state, MOCK_ROOM);
     let cards = new Set<string>();
     cards.add(state.card1);
     cards.add(state.card2);
@@ -52,7 +58,7 @@ describe("newHand() tests", () => {
       state.players[i].isSeated = true;
       state.players[i].isFolded = true;
     }
-    newHand(state);
+    newHand(state, MOCK_ROOM);
     expect(state.players.filter((p) => p.isFolded)).toStrictEqual([]);
   });
   test("Correct roles assigned", () => {
@@ -63,17 +69,45 @@ describe("newHand() tests", () => {
     state.players[8].isSeated = true;
     state.currentPlayer = 5;
     state.currentDealer = 8;
-    newHand(state);
+    newHand(state, MOCK_ROOM);
     expect(state.currentDealer).toBe(1);
     expect(state.currentPlayer).toBe(8);
     expect(state.street).toBe(Streets.PREFLOP);
     expect(state.currentBet).toBe(state.bigBlind);
-    expect(state.pot).toBe(state.bigBlind + state.smallBlind);
+    expect(state.pot).toBe(0);
   });
 });
 
 describe("advancePlayer() tests", () => {
-  // test();
+  test("Street doesn't end", () => {
+    let state = new PokerState();
+    state.players[3].isSeated = true;
+    state.players[4].isSeated = true;
+    state.players[7].isSeated = true;
+    state.currentPlayer = 4;
+    state.currentDealer = 3;
+    state.lastPlayer = 3;
+    let stateCopy = state.clone();
+    stateCopy.currentPlayer = 7;
+    advancePlayer(state, MOCK_ROOM);
+    expect(state).toStrictEqual(stateCopy);
+  });
+
+  test("Street ends", () => {
+    let state = new PokerState();
+    state.players[3].isSeated = true;
+    state.players[4].isSeated = true;
+    state.players[7].isSeated = true;
+    state.currentPlayer = 7;
+    state.currentDealer = 3;
+    state.lastPlayer = 3;
+    let stateCopy = state.clone();
+    stateCopy.currentPlayer = 4;
+    stateCopy.lastPlayer = 4;
+    stateCopy.street = Streets.FLOP;
+    advancePlayer(state, MOCK_ROOM);
+    expect(state).toStrictEqual(stateCopy);
+  });
 });
 
 describe("findWinner() tests", () => {
@@ -147,5 +181,27 @@ describe("findWinner() tests", () => {
       ]
     );
     expect(findWinner(state)).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  });
+
+  test("players folded", () => {
+    let state = createPokerState(
+      ["As", "Ts", "Js", "Qs", "Ks"],
+      [
+        ["Ac", "9s"],
+        ["Ad", "Ah"],
+        ["7c", "2s"],
+        ["7s", "2h"],
+        ["7d", "2d"],
+        ["Qc", "Qd"],
+        ["9c", "4s"],
+        ["3d", "9d"],
+        ["3h", "Td"],
+      ]
+    );
+    state.players.forEach((p) => {
+      p.isFolded = true;
+    });
+    state.players[4].isFolded = false;
+    expect(findWinner(state)).toStrictEqual([4]);
   });
 });

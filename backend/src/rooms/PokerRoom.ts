@@ -12,22 +12,22 @@ export class PokerRoom extends Room<PokerState> {
   onCreate(options: any) {
     this.setState(new PokerState());
 
+    this.onMessage("start", (client, message) => {
+      console.log(client.id + " said " + message);
+      newHand(this.state, this);
+    });
+
     this.onMessage("bet", (client, message) => {
       console.log(client.id + " has bet " + message);
       if (!isTurn(this.state, this.idToSeat, client.id)) return false;
       let bet = Number(message);
       if (bet === NaN) return false;
-      betPlayer(this.state, this.idToSeat.get(client.id), bet);
-    });
-
-    this.onMessage("start", (client, message) => {
-      console.log(client.id + " said " + message);
-      newHand(this.state);
+      betPlayer(this.state, this.idToSeat.get(client.id), bet, this);
     });
 
     this.onMessage("fold", (client, message) => {
       if (!isTurn(this.state, this.idToSeat, client.id)) return false;
-      foldPlayer(this.state, this.idToSeat.get(client.id));
+      foldPlayer(this.state, this.idToSeat.get(client.id), this);
     });
 
     // TODO fix joining while hand is in progress
@@ -53,6 +53,38 @@ export class PokerRoom extends Room<PokerState> {
   onLeave(client: Client, consented: boolean) {
     this.state.players[this.idToSeat.get(client.id)] = new PokerPlayer();
     this.idToSeat.delete(client.id);
+  }
+
+  notifyResults(winners: Array<number>): void {
+    this.broadcast("end_hand", winners);
+    this.clients;
+  }
+
+  notifyHand(): void {
+    this.clients.forEach((c) => {
+      this.state.players.forEach((p) => {
+        if (p.clientID === c.id) {
+          c.send("cards", { card1: p.card1, card2: p.card2 });
+        }
+      });
+    });
+  }
+
+  notifyBoard(): void {
+    let cards: any = {};
+    switch (this.state.street) {
+      case Streets.RIVER:
+        cards.card5 = this.state.card5;
+      case Streets.TURN:
+        cards.card4 = this.state.card4;
+      case Streets.FLOP:
+        cards.card1 = this.state.card1;
+        cards.card2 = this.state.card2;
+        cards.card3 = this.state.card3;
+      default:
+        break;
+    }
+    this.broadcast("board", cards);
   }
 
   onDispose() {}
