@@ -62,6 +62,15 @@ export class Network {
       this.setStateCallback({ connected: true, game: this.room!.state, net: this });
     });
 
+    this.room!.onMessage("showdown", (msg) => {
+      for (let i = 0; i < msg.length; i++) {
+        const playerCards = msg[i];
+        this.room!.state.players[i].card1 = playerCards[0];
+        this.room!.state.players[i].card2 = playerCards[1];
+      }
+      this.setStateCallback({ connected: true, game: this.room!.state, net: this });
+    });
+
     this.room!.onMessage("board", (msg) => {
       this.room!.state.card1 = msg.card1;
       this.room!.state.card2 = msg.card2;

@@ -70,6 +70,38 @@ export class PokerRoom extends Room<PokerState> {
     });
   }
 
+  notifyHands(): void {
+    // TODO mucking hands
+
+    let hands = [];
+    this.state.players.forEach((p) => {
+      hands.push([p.card1, p.card2]);
+    });
+
+    this.clients.forEach((c) => {
+      c.send("showdown", hands);
+    });
+  }
+
+  notifyClearHands(): void {
+    // TODO mucking hands
+
+    let hands = [
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+      ["EM", "EM"],
+    ];
+    this.clients.forEach((c) => {
+      c.send("showdown", hands);
+    });
+  }
+
   notifyBoard(): void {
     let cards: any = {};
     switch (this.state.street) {
