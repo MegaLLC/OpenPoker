@@ -1,4 +1,4 @@
-import { advancePlayer } from "./PokerLogic";
+import { advancePlayer, endGame } from "./PokerLogic";
 import { PokerState } from "../schema/PokerState";
 import { Room } from "colyseus/lib/Room";
 import { PokerRoom } from "../PokerRoom";
@@ -8,7 +8,23 @@ export function foldPlayer(state: PokerState, seat: number, room: PokerRoom) {
   player.card1 = "EM";
   player.card2 = "EM";
   player.isFolded = true;
-  advancePlayer(state, room);
+
+  if (checkRoundEnd(state, room)) {
+    endGame(state, room);
+  } else {
+    advancePlayer(state, room);
+  }
+}
+
+function checkRoundEnd(state: PokerState, room: PokerRoom): boolean {
+  let activePlayers = 0;
+  state.players.forEach((p) => {
+    if (p.isSeated && !p.isFolded) {
+      activePlayers++;
+    }
+  });
+
+  return activePlayers == 1;
 }
 
 export function betPlayer(state: PokerState, seat: number, betMessage: number, room: PokerRoom): boolean {

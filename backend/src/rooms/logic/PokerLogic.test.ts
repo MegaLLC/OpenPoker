@@ -5,7 +5,7 @@ import { MAX_PLAYERS, Streets } from "./PokerConstants";
 import _ from "lodash";
 import { PokerRoom } from "../PokerRoom";
 
-let MOCK_ROOM = new PokerRoom();
+let MOCK_ROOM = <PokerRoom>{};
 MOCK_ROOM.notifyHand = _.noop;
 MOCK_ROOM.notifyBoard = _.noop;
 
@@ -181,5 +181,27 @@ describe("findWinner() tests", () => {
       ]
     );
     expect(findWinner(state)).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  });
+
+  test("players folded", () => {
+    let state = createPokerState(
+      ["As", "Ts", "Js", "Qs", "Ks"],
+      [
+        ["Ac", "9s"],
+        ["Ad", "Ah"],
+        ["7c", "2s"],
+        ["7s", "2h"],
+        ["7d", "2d"],
+        ["Qc", "Qd"],
+        ["9c", "4s"],
+        ["3d", "9d"],
+        ["3h", "Td"],
+      ]
+    );
+    state.players.forEach((p) => {
+      p.isFolded = true;
+    });
+    state.players[4].isFolded = false;
+    expect(findWinner(state)).toStrictEqual([4]);
   });
 });

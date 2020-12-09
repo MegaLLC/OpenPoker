@@ -1,12 +1,19 @@
+import _ from "lodash";
 import { PokerRoom } from "../PokerRoom";
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS } from "./PokerConstants";
 import { getNextPlayer } from "./PokerHelper";
-import { newHand } from "./PokerLogic";
+import { endGame, newHand } from "./PokerLogic";
 import { betPlayer, foldPlayer } from "./PokerPlayerLogic";
 
+jest.useFakeTimers();
+
 let state: PokerState;
-let MOCK_ROOM = new PokerRoom();
+let MOCK_ROOM = <PokerRoom>{};
+MOCK_ROOM.notifyHand = _.noop;
+MOCK_ROOM.notifyBoard = _.noop;
+MOCK_ROOM.notifyResults = _.noop;
+
 beforeEach(() => {
   state = new PokerState();
   for (let i = 0; i < MAX_PLAYERS; i++) {
@@ -26,6 +33,26 @@ describe("foldPlayer() tests", () => {
     let prevPlayer = state.currentPlayer;
     foldPlayer(state, 7, MOCK_ROOM);
     expect(state.currentPlayer).not.toBe(prevPlayer);
+  });
+  test("one player left ends game", () => {
+    newHand(state, MOCK_ROOM);
+    state.players.forEach((p) => {
+      p.isFolded = true;
+    });
+    state.players[3].isFolded = false;
+    state.players[3].bet = 30;
+    state.players[2].isFolded = false;
+    state.players[2].bet = 10;
+    state.pot = 200;
+    const statecopy = state.clone();
+    statecopy.players[2].bet = 0;
+    statecopy.players[2].isFolded = true;
+    statecopy.players[3].bet = 0;
+    statecopy.players[3].chips += 240;
+    statecopy.pot = 0;
+    foldPlayer(state, 2, MOCK_ROOM);
+    expect(state).toStrictEqual(statecopy);
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), expect.any(Number));
   });
 });
 

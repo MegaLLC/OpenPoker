@@ -1,4 +1,5 @@
 import { Client, Room } from "colyseus.js";
+import { toast } from "react-toastify";
 
 export class Network {
   client: Client;
@@ -27,7 +28,32 @@ export class Network {
     });
 
     this.room!.onMessage("end_hand", (msg) => {
-      console.log(msg);
+      const winnerCount = msg.length;
+
+      const players = this.room!.state.players;
+      let winnerName = "";
+      if (winnerCount > 2) {
+        const playerNames: string[] = msg.map((seatNumber) => players[seatNumber].name);
+        winnerName = playerNames.slice(1).join(", ");
+        winnerName += " and " + playerNames[0];
+        winnerName += " have";
+      } else if (winnerCount === 2) {
+        winnerName = `${players[msg[0]].name} and ${players[msg[1]].name}`;
+        winnerName += " have";
+      } else {
+        winnerName = players[msg[0]].name + " has";
+      }
+      let winnerMsg = winnerName + " won the hand 🚀";
+
+      toast.info(winnerMsg, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
 
     this.room!.onMessage("cards", (msg) => {

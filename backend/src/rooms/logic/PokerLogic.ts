@@ -41,6 +41,7 @@ export function newHand(state: PokerState, room: PokerRoom) {
 
   state.currentBet = state.bigBlind;
   room.notifyHand();
+  room.notifyBoard();
 }
 
 export function advancePlayer(state: PokerState, room: PokerRoom) {
@@ -50,28 +51,22 @@ export function advancePlayer(state: PokerState, room: PokerRoom) {
   }
 }
 
-function advanceStreet(state: PokerState, room: PokerRoom) {
+function submitBets(state: PokerState) {
   state.players.forEach((p) => {
     state.pot += p.bet;
     p.bet = 0;
   });
+}
+
+function advanceStreet(state: PokerState, room: PokerRoom) {
+  submitBets(state);
   state.street++;
   state.currentPlayer = PH.getNextPlayer(state, state.currentDealer);
   state.currentBet = 0;
   state.lastPlayer = state.currentPlayer;
   room.notifyBoard();
-  // end of game state
   if (state.street == Streets.SHOWDOWN) {
-    const winners = findWinner(state);
-    const winnings = Math.round((state.pot * 100) / winners.length) / 100;
-    state.pot = 0;
-    winners.forEach((i) => {
-      state.players[i].chips += winnings;
-    });
-    setTimeout(() => {
-      newHand(state, room);
-    }, 300);
-    room.notifyResults(winners);
+    endGame(state, room);
   }
 }
 
@@ -106,4 +101,18 @@ export function findWinner(state: PokerState): Array<number> {
     }
   }
   return currWinners;
+}
+
+export function endGame(state: PokerState, room: PokerRoom): void {
+  submitBets(state);
+  const winners = findWinner(state);
+  const winnings = Math.round((state.pot * 100) / winners.length) / 100;
+  state.pot = 0;
+  winners.forEach((i) => {
+    state.players[i].chips += winnings;
+  });
+  setTimeout(() => {
+    newHand(state, room);
+  }, 5000);
+  room.notifyResults(winners);
 }

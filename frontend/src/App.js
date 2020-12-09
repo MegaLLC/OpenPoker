@@ -85,21 +85,6 @@ class WholeBoard extends React.Component {
           draggable
           pauseOnHover
         />
-        <button
-          onClick={() => {
-            toast.info("Yo", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-          }}
-        >
-          Yo
-        </button>
         <Container>
           <Row style={{ height: "25vh" }}>
             <div className="col-10 m-auto bg-success"></div>
