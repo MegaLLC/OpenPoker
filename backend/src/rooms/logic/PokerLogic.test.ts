@@ -2,12 +2,7 @@ import { advancePlayer, findWinner, newHand } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
-import _ from "lodash";
-import { PokerRoom } from "../PokerRoom";
-
-let MOCK_ROOM = <PokerRoom>{};
-MOCK_ROOM.notifyHand = _.noop;
-MOCK_ROOM.notifyBoard = _.noop;
+import { MOCK_ROOM } from "./MockRoom";
 
 function createPokerState(board: Array<string>, hands: Array<Array<string>>): PokerState {
   let state = new PokerState();

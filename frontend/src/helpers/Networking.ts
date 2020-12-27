@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 export class Network {
   client: Client;
   room: Room | undefined;
+  connected = false;
   seat: number = 0;
   setStateCallback: any;
   pastSession: string | undefined;
@@ -11,20 +12,19 @@ export class Network {
   constructor(setStateCallback) {
     this.client = new Client("ws://localhost:2567");
     this.setStateCallback = setStateCallback;
-    this.connect();
   }
 
   onJoin(room) {
     this.room = room;
     this.pastSession = room.sessionId;
     room.onStateChange((state) => {
-      this.setStateCallback({ connected: true, game: room.state, net: this });
+      this.setStateCallback({ game: room.state, net: this });
     });
 
-    room.onLeave((code) => {
-      this.setStateCallback({ connected: false, net: this });
+    room.onLeave(() => {
       this.room = undefined;
-      console.log("Server has crashed -_-");
+      this.connected = false;
+      this.setStateCallback({ net: this });
     });
 
     this.room!.onMessage("end_hand", (msg) => {
@@ -59,7 +59,7 @@ export class Network {
     this.room!.onMessage("cards", (msg) => {
       this.room!.state.players[this.seat].card1 = msg.card1;
       this.room!.state.players[this.seat].card2 = msg.card2;
-      this.setStateCallback({ connected: true, game: this.room!.state, net: this });
+      this.setStateCallback({ game: this.room!.state, net: this });
     });
 
     this.room!.onMessage("showdown", (msg) => {
@@ -68,7 +68,7 @@ export class Network {
         this.room!.state.players[i].card1 = playerCards[0];
         this.room!.state.players[i].card2 = playerCards[1];
       }
-      this.setStateCallback({ connected: true, game: this.room!.state, net: this });
+      this.setStateCallback({ game: this.room!.state, net: this });
     });
 
     this.room!.onMessage("board", (msg) => {
@@ -77,12 +77,23 @@ export class Network {
       this.room!.state.card3 = msg.card3;
       this.room!.state.card4 = msg.card4;
       this.room!.state.card5 = msg.card5;
-      this.setStateCallback({ connected: true, game: this.room!.state, net: this });
+      this.setStateCallback({ game: this.room!.state, net: this });
     });
   }
 
   connect() {
-    this.client.joinOrCreate("main").then((room) => this.onJoin(room));
+    this.client
+      .joinOrCreate("main")
+      .then((room) => this.onJoin(room))
+      // success
+      .then(() => {
+        console.log("connected");
+        this.connected = true;
+      })
+      // can't connect
+      .catch((error) => {
+        this.connected = false;
+      });
   }
 
   startGame() {

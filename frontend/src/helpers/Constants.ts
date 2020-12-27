@@ -1,0 +1,22 @@
+export const defaultState = {
+  currentPlayer: 0,
+  currentDealer: 0,
+  pot: 0,
+  currentBet: 0,
+  card1: "",
+  card2: "",
+  card3: "",
+  card4: "",
+  card5: "",
+  players: [
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+    { isSeated: false, name: "", card1: "", card2: "", chips: 0, bet: 0 },
+  ],
+};

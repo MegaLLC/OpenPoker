@@ -105,6 +105,7 @@ export function findWinner(state: PokerState): Array<number> {
 }
 
 export function endGame(state: PokerState, room: PokerRoom): void {
+  state.street = Streets.SHOWDOWN;
   submitBets(state);
   const winners = findWinner(state);
   const winnings = Math.round((state.pot * 100) / winners.length) / 100;

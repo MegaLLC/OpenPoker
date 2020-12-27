@@ -1,19 +1,14 @@
 import _ from "lodash";
-import { PokerRoom } from "../PokerRoom";
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS } from "./PokerConstants";
 import { getNextPlayer } from "./PokerHelper";
-import { endGame, newHand } from "./PokerLogic";
+import { newHand } from "./PokerLogic";
 import { betPlayer, foldPlayer } from "./PokerPlayerLogic";
+import { MOCK_ROOM } from "./MockRoom";
 
 jest.useFakeTimers();
 
 let state: PokerState;
-let MOCK_ROOM = <PokerRoom>{};
-MOCK_ROOM.notifyHand = _.noop;
-MOCK_ROOM.notifyBoard = _.noop;
-MOCK_ROOM.notifyResults = _.noop;
-
 beforeEach(() => {
   state = new PokerState();
   for (let i = 0; i < MAX_PLAYERS; i++) {
@@ -50,6 +45,7 @@ describe("foldPlayer() tests", () => {
     statecopy.players[3].bet = 0;
     statecopy.players[3].chips += 240;
     statecopy.pot = 0;
+    statecopy.street = 4;
     foldPlayer(state, 2, MOCK_ROOM);
     expect(state).toStrictEqual(statecopy);
     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), expect.any(Number));

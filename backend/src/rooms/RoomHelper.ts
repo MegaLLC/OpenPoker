@@ -1,3 +1,4 @@
+import { Streets } from "./logic/PokerConstants";
 import { PokerState } from "./schema/PokerState";
 
 export function parseSeat(input: any): number {
@@ -8,5 +9,6 @@ export function parseSeat(input: any): number {
 }
 
 export function isTurn(state: PokerState, idToSeat: Map<string, number>, id: string): boolean {
-  return state.currentPlayer === idToSeat.get(id);
+  let isTurn = state.currentPlayer === idToSeat.get(id);
+  return isTurn && state.street != Streets.SHOWDOWN;
 }

@@ -4,18 +4,19 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import Card from "./components/Card";
 import createPlayerlist from "./components/Player";
 import { ControlBox } from "./components/ControlBox";
 
 import { Network } from "./helpers/Networking";
+import { defaultState } from "./helpers/Constants";
 
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
-import Col from "react-bootstrap/esm/Col";
 
 /*
 React Component Layout
@@ -31,9 +32,6 @@ WholeBoard
   ControlBox
     <Fold, Call, Raise buttons etc>
 
-
-    Add mp3 sound when you win on showdown
-
     button greyed out state.
 
     Things that are actually state:
@@ -43,9 +41,6 @@ WholeBoard
 
     hd and em
 */
-
-// if cards empty conditionally render nothing.
-
 const PokerTable = (props) => {
   return (
     <div className="col-9 m-auto table" style={{ height: "100%" }}>
@@ -64,16 +59,37 @@ const PokerTable = (props) => {
   );
 };
 
+const DisconnectPopup = (reconnect) => {
+  return (
+    <Modal show={true} backdrop="static" centered>
+      <Modal.Header>
+        <Modal.Title className={"w-100 text-center"}>
+          <h2>Disconnected</h2>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body className={"d-flex justify-content-center p-4"}>
+        <Button variant="outline-info" onClick={reconnect}>
+          Reconnect
+        </Button>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
 class WholeBoard extends React.Component {
   constructor() {
     super();
-    new Network(this.setState.bind(this));
+    this.state = { net: new Network(this.setState.bind(this)), game: defaultState };
+  }
+
+  componentDidMount() {
+    this.state.net.connect();
   }
 
   render() {
-    console.log(this.state);
-    return this.state && this.state.connected ? (
+    return (
       <div className="overall">
+        {!this.state.net.connected && DisconnectPopup(this.state.net.connect.bind(this.state.net))}
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -95,21 +111,6 @@ class WholeBoard extends React.Component {
           </Row>
           <Row style={{ height: "35vh" }}>
             <ControlBox _={this.state} />
-          </Row>
-        </Container>
-      </div>
-    ) : (
-      <div>
-        <Container>
-          <Row className="mt-4">
-            <Col className="m-auto">
-              <h1 className="text-center">Disconnected</h1>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="m-auto d-flex justify-content-center">
-              <Button onClick={() => this.state.net.connect()}>Reconnect</Button>
-            </Col>
           </Row>
         </Container>
       </div>
