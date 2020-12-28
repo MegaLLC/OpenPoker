@@ -5,6 +5,13 @@
   border: 0.2em solid black;
 }
 
+.self {
+  position: absolute;
+  right: -1.5em;
+  top: -1.5em;
+  border: 0.2em solid black;
+}
+
 .player {
   position: absolute;
   display: block;

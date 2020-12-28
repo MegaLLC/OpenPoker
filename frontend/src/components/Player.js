@@ -10,6 +10,7 @@ const Player = (props) => {
   let gameState = props._.game;
   let playerState = gameState.players[props.index];
   let isDealer = props.index === gameState.currentDealer;
+  let isSelf = props.index === props._.net.seat;
   let isSeated = playerState.isSeated;
   let isTurn = props.index === gameState.currentPlayer;
 
@@ -27,6 +28,10 @@ const Player = (props) => {
           {/* Dealer button */}
           <Badge variant="warning" className="dealer" style={{ visibility: isDealer ? "visible" : "hidden" }}>
             <h5 className="my-0">D</h5>
+          </Badge>
+          {/* Self button */}
+          <Badge variant="success" className="self" style={{ visibility: isSelf ? "visible" : "hidden" }}>
+            <h5 className="my-0">You</h5>
           </Badge>
         </div>
       ) : (
