@@ -7,10 +7,11 @@ import "./Card.css";
 const Card = (props) => {
   return (
     <div className="card-wrapper m-auto">
-      <div className="card bg-secondary">
-        <img src={"./cards/hd.svg"} className="card-image card-back" alt=""></img>
-        <img src={"./cards/" + props.card + ".svg"} className="card-image card-front" alt=""></img>
-      </div>
+      {props.card && props.card !== "EM" && (
+        <div className="card bg-secondary">
+          <img src={"./cards/" + props.card + ".svg"} className="card-image card-front" alt=""></img>
+        </div>
+      )}
     </div>
   );
 };

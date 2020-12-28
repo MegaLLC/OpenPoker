@@ -4,9 +4,9 @@
   height: 90%;
 }
 
-.card-wrapper:hover .card {
+/* .card-wrapper:hover .card {
   transform: rotateY(180deg);
-}
+} */
 
 .card {
   position: relative;

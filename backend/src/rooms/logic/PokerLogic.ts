@@ -41,7 +41,7 @@ export function newHand(state: PokerState, room: PokerRoom) {
 
   state.currentBet = state.bigBlind;
   room.notifyClearHands();
-  room.notifyHand();
+  room.notifyHands(true);
   room.notifyBoard();
 }
 
@@ -117,5 +117,5 @@ export function endGame(state: PokerState, room: PokerRoom): void {
     newHand(state, room);
   }, 5000);
   room.notifyResults(winners);
-  room.notifyHands();
+  room.notifyHands(false);
 }

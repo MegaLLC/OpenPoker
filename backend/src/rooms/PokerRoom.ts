@@ -60,17 +60,7 @@ export class PokerRoom extends Room<PokerState> {
     this.clients;
   }
 
-  notifyHand(): void {
-    this.clients.forEach((c) => {
-      this.state.players.forEach((p) => {
-        if (p.clientID === c.id) {
-          c.send("cards", { card1: p.card1, card2: p.card2 });
-        }
-      });
-    });
-  }
-
-  notifyHands(): void {
+  notifyHands(hidden: boolean): void {
     // TODO mucking hands
 
     let hands = [];
@@ -79,7 +69,17 @@ export class PokerRoom extends Room<PokerState> {
     });
 
     this.clients.forEach((c) => {
-      c.send("showdown", hands);
+      let hiddenHands = [...hands];
+
+      if (hidden) {
+        for (let i = 0; i < hands.length; i++) {
+          if (i != this.idToSeat.get(c.id) && hands[i][0] != "EM") {
+            hiddenHands[i] = ["HD", "HD"];
+          }
+        }
+      }
+
+      c.send("hands", hiddenHands);
     });
   }
 
@@ -105,6 +105,7 @@ export class PokerRoom extends Room<PokerState> {
   notifyBoard(): void {
     let cards: any = {};
     switch (this.state.street) {
+      case Streets.SHOWDOWN:
       case Streets.RIVER:
         cards.card5 = this.state.card5;
       case Streets.TURN:
@@ -113,8 +114,6 @@ export class PokerRoom extends Room<PokerState> {
         cards.card1 = this.state.card1;
         cards.card2 = this.state.card2;
         cards.card3 = this.state.card3;
-      default:
-        break;
     }
     this.broadcast("board", cards);
   }

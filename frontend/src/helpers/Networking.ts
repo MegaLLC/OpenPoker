@@ -56,13 +56,7 @@ export class Network {
       });
     });
 
-    this.room!.onMessage("cards", (msg) => {
-      this.room!.state.players[this.seat].card1 = msg.card1;
-      this.room!.state.players[this.seat].card2 = msg.card2;
-      this.setStateCallback({ game: this.room!.state, net: this });
-    });
-
-    this.room!.onMessage("showdown", (msg) => {
+    this.room!.onMessage("hands", (msg) => {
       for (let i = 0; i < msg.length; i++) {
         const playerCards = msg[i];
         this.room!.state.players[i].card1 = playerCards[0];

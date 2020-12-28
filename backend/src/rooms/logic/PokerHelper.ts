@@ -9,7 +9,7 @@ export function getNextPlayer(state: PokerState, currentPlayer: number): number 
     if (rip > 100) return NaN;
     currentPlayer++;
     currentPlayer %= 9;
-  } while (!(state.players[currentPlayer].isSeated || state.players[currentPlayer].isFolded));
+  } while (!state.players[currentPlayer].isSeated || state.players[currentPlayer].isFolded);
   return currentPlayer;
 }
 

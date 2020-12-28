@@ -1,19 +1,25 @@
 import { advancePlayer, endGame } from "./PokerLogic";
 import { PokerState } from "../schema/PokerState";
-import { Room } from "colyseus/lib/Room";
 import { PokerRoom } from "../PokerRoom";
+import { getNextPlayer } from "./PokerHelper";
 
 export function foldPlayer(state: PokerState, seat: number, room: PokerRoom) {
-  let player = state.players[seat];
-  player.card1 = "EM";
-  player.card2 = "EM";
-  player.isFolded = true;
+  state.players[seat].card1 = "EM";
+  state.players[seat].card2 = "EM";
+  state.players[seat].isFolded = true;
 
   if (checkRoundEnd(state, room)) {
     endGame(state, room);
   } else {
     advancePlayer(state, room);
   }
+
+  // update last player if you are the last player
+  if (seat === state.lastPlayer) {
+    state.lastPlayer = getNextPlayer(state, seat);
+  }
+
+  room.notifyHands(true);
 }
 
 function checkRoundEnd(state: PokerState, room: PokerRoom): boolean {
