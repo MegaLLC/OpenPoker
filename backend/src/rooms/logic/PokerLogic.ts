@@ -4,6 +4,8 @@ import * as _ from "lodash";
 import { Hand } from "pokersolver";
 import * as PH from "./PokerHelper";
 import { PokerRoom } from "../PokerRoom";
+import { max, min } from "lodash";
+import { PotState } from "../schema/PotState";
 
 export function newHand(state: PokerState, room: PokerRoom) {
   // distribute cards and reset board.
@@ -52,11 +54,28 @@ export function advancePlayer(state: PokerState, room: PokerRoom) {
   }
 }
 
-function submitBets(state: PokerState) {
-  state.players.forEach((p) => {
-    state.pot += p.bet;
-    p.bet = 0;
-  });
+// clear out bets and put it into the pot
+// append pot states to the pot calculate and popstate objects to represent parts of the pot
+// and players who are entitled to said part
+export function submitBets(state: PokerState) {
+  let bets = state.players.map((p) => p.bet);
+  for (let i = 0; i < state.players.length; i++) {
+    state.players[i].bet = 0;
+  }
+
+  while (max(bets) > 0) {
+    const smallestBet = min(bets.filter((bet) => bet > 0));
+    bets = bets.map((playerBet) => playerBet - smallestBet);
+    const potState = new PotState();
+
+    for (let i = 0; i < bets.length; i++) {
+      if (bets[i] >= 0) {
+        potState.players.add(i);
+      }
+    }
+    potState.chips = smallestBet * potState.players.size;
+    state.pot.push(potState);
+  }
 }
 
 function advanceStreet(state: PokerState, room: PokerRoom) {
@@ -108,8 +127,10 @@ export function endGame(state: PokerState, room: PokerRoom): void {
   state.street = Streets.SHOWDOWN;
   submitBets(state);
   const winners = findWinner(state);
-  const winnings = Math.round((state.pot * 100) / winners.length) / 100;
-  state.pot = 0;
+  // const winnings = Math.round((state.pot * 100) / winners.length) / 100;
+  // TODO fix this
+  const winnings = 0;
+  // state.pot = 0;
   winners.forEach((i) => {
     state.players[i].chips += winnings;
   });

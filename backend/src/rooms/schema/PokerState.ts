@@ -2,6 +2,7 @@ import { Schema, ArraySchema, type, filter } from "@colyseus/schema";
 import { PokerPlayer } from "./PlayerState";
 import { Streets } from "../logic/PokerConstants";
 import { nosync } from "colyseus";
+import { PotState } from "./PotState";
 
 export class PokerState extends Schema {
   @type([PokerPlayer])
@@ -22,8 +23,8 @@ export class PokerState extends Schema {
   @type("number")
   smallBlind: number = 25;
 
-  @type("number")
-  pot: number = 0;
+  @type([PotState])
+  pot = new ArraySchema<PotState>();
 
   @type("number")
   currentBet: number = 0;

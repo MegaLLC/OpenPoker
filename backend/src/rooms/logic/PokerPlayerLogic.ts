@@ -46,6 +46,10 @@ function doBetPlayer(state: PokerState, seat: number, betMessage: number): boole
   const amountSpent = betMessage - playerCurrentBet;
   if (amountSpent > state.players[seat].chips) return false;
 
+  if (amountSpent === state.players[seat].chips) {
+    console.log("all in");
+  }
+
   if (betMessage < state.currentBet) {
     // can't play on without paying
     return false;
@@ -53,8 +57,6 @@ function doBetPlayer(state: PokerState, seat: number, betMessage: number): boole
     if (betMessage === playerCurrentBet) return true; // check
 
     // call
-    // TODO out of money edge cases
-    // TODO handle all in cases
     let neededToCall = state.currentBet - playerCurrentBet;
     state.players[seat].bet += neededToCall;
     state.players[seat].chips -= neededToCall;

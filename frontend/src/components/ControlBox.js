@@ -11,7 +11,7 @@ import "./ControlBox.css";
 const SliderWithInputFormControl = (_) => {
   const self = _.state.game.players[_.state.net.seat];
   const minV = _.state.game.currentBet * 2;
-  const maxV = self.chips;
+  const maxV = self.chips + self.bet;
   const [value, setValue] = React.useState(minV);
   const [sliderValue, setSliderValue] = React.useState(minV);
   let sendValue = (value) => {
@@ -35,7 +35,7 @@ const SliderWithInputFormControl = (_) => {
         <Col xs="9">
           <RangeSlider
             min={_.state.game.currentBet * 2}
-            max={self.chips}
+            max={maxV}
             value={sliderValue}
             onChange={(e) => sendValue(e.target.value)}
           />

@@ -1,8 +1,9 @@
-import { advancePlayer, findWinner, newHand } from "./PokerLogic";
+import { advancePlayer, findWinner, newHand, submitBets } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
 import { MOCK_ROOM } from "./MockRoom";
+import { PotState } from "../schema/PotState";
 
 function createPokerState(board: Array<string>, hands: Array<Array<string>>): PokerState {
   let state = new PokerState();
@@ -69,7 +70,7 @@ describe("newHand() tests", () => {
     expect(state.currentPlayer).toBe(8);
     expect(state.street).toBe(Streets.PREFLOP);
     expect(state.currentBet).toBe(state.bigBlind);
-    expect(state.pot).toBe(0);
+    expect(state.pot.length).toBe(0);
   });
 });
 
@@ -198,5 +199,120 @@ describe("findWinner() tests", () => {
     });
     state.players[4].isFolded = false;
     expect(findWinner(state)).toStrictEqual([4]);
+  });
+});
+
+describe("submitBets() tests", () => {
+  let state: PokerState;
+
+  function setPlayerBets(state: PokerState, bets: number[]) {
+    for (let i = 0; i < bets.length; i++) {
+      state.players[i].bet = bets[i];
+    }
+  }
+
+  beforeEach(() => {
+    state = new PokerState();
+  });
+
+  test("no bets", () => {
+    setPlayerBets(state, [0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    submitBets(state);
+    expect(state.pot.length).toBe(0);
+  });
+
+  test("2 bets", () => {
+    setPlayerBets(state, [0, 0, 50, 50, 0, 0, 0, 0, 0]);
+    submitBets(state);
+
+    const bet1 = new PotState();
+    bet1.chips = 100;
+    bet1.players.add(2);
+    bet1.players.add(3);
+    console.log(state.pot.at(0));
+    expect(state.pot.at(0)).toStrictEqual(bet1);
+    expect(state.pot.length).toBe(1);
+  });
+
+  test("1 player all in, 2 players bet", () => {
+    setPlayerBets(state, [100, 0, 50, 0, 0, 100, 0, 0, 0]);
+    submitBets(state);
+
+    const bet1 = new PotState();
+    bet1.chips = 150;
+    bet1.players.add(0);
+    bet1.players.add(2);
+    bet1.players.add(5);
+    expect(state.pot.at(0)).toStrictEqual(bet1);
+
+    const bet2 = new PotState();
+    bet2.chips = 100;
+    bet2.players.add(0);
+    bet2.players.add(5);
+    expect(state.pot.at(1)).toStrictEqual(bet2);
+
+    expect(state.pot.length).toBe(2);
+  });
+
+  test("5 way all in", () => {
+    setPlayerBets(state, [1, 2, 3, 4, 9, 9, 9, 9, 9]);
+    submitBets(state);
+
+    const bet1 = new PotState();
+    bet1.chips = 9;
+    bet1.players.add(0);
+    bet1.players.add(1);
+    bet1.players.add(2);
+    bet1.players.add(3);
+    bet1.players.add(4);
+    bet1.players.add(5);
+    bet1.players.add(6);
+    bet1.players.add(7);
+    bet1.players.add(8);
+    expect(state.pot.at(0)).toStrictEqual(bet1);
+
+    const bet2 = new PotState();
+    bet2.chips = 8;
+    bet2.players.add(1);
+    bet2.players.add(2);
+    bet2.players.add(3);
+    bet2.players.add(4);
+    bet2.players.add(5);
+    bet2.players.add(6);
+    bet2.players.add(7);
+    bet2.players.add(8);
+    expect(state.pot.at(1)).toStrictEqual(bet2);
+
+    const bet3 = new PotState();
+    bet3.chips = 7;
+    bet3.players.add(2);
+    bet3.players.add(3);
+    bet3.players.add(4);
+    bet3.players.add(5);
+    bet3.players.add(6);
+    bet3.players.add(7);
+    bet3.players.add(8);
+    expect(state.pot.at(2)).toStrictEqual(bet3);
+
+    const bet4 = new PotState();
+    bet4.chips = 6;
+    bet4.players.add(3);
+    bet4.players.add(4);
+    bet4.players.add(5);
+    bet4.players.add(6);
+    bet4.players.add(7);
+    bet4.players.add(8);
+    expect(state.pot.at(3)).toStrictEqual(bet4);
+
+    const bet5 = new PotState();
+    bet5.chips = 25;
+    bet5.players.add(4);
+    bet5.players.add(5);
+    bet5.players.add(6);
+    bet5.players.add(7);
+    bet5.players.add(8);
+    expect(state.pot.at(4)).toStrictEqual(bet5);
+
+    expect(state.pot.length).toBe(5);
   });
 });
