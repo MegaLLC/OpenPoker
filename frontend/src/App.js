@@ -45,7 +45,7 @@ WholeBoard
 const PokerTable = (props) => {
   let pot = 0;
   if (props._.game.pot.length) {
-    pot = props._.game.pot.map((potState) => potState.chips).reduce(sum);
+    pot = sum(props._.game.pot.map((potState) => potState.chips));
   }
   return (
     <div className="col-9 m-auto table" style={{ height: "100%" }}>

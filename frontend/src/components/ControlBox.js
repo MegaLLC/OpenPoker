@@ -9,36 +9,18 @@ import Row from "react-bootstrap/Row";
 import "./ControlBox.css";
 
 const SliderWithInputFormControl = (_) => {
-  const self = _.state.game.players[_.state.net.seat];
-  const minV = _.state.game.currentBet * 2;
-  const maxV = self.chips + self.bet;
-  const [value, setValue] = React.useState(minV);
-  const [sliderValue, setSliderValue] = React.useState(minV);
-  let sendValue = (value) => {
-    value = Math.min(value, maxV);
-    value = Math.max(value, minV);
-    setSliderValue(value);
-    setValue(value);
-    _.valueCallback(value);
-  };
-
   return (
     <Form>
       <Form.Group as={Row}>
         <Col xs="3">
           <Form.Control
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={(e) => sendValue(e.target.value)}
+            value={_.value}
+            onChange={(e) => _.setValue(e.target.value)}
+            onBlur={(e) => _.sendValue(e.target.value)}
           />
         </Col>
         <Col xs="9">
-          <RangeSlider
-            min={_.state.game.currentBet * 2}
-            max={maxV}
-            value={sliderValue}
-            onChange={(e) => sendValue(e.target.value)}
-          />
+          <RangeSlider min={_.minV} max={_.maxV} value={_.value} onChange={(e) => _.sendValue(e.target.value)} />
         </Col>
       </Form.Group>
     </Form>
@@ -47,17 +29,33 @@ const SliderWithInputFormControl = (_) => {
 
 // prettier-ignore
 export class ControlBox extends React.Component {
+
+  self = 0;
+  minV = 0;
+  maxV = 0;
+
+  sendValue = (newValue) => {
+    newValue = Math.min(newValue, this.maxV);
+    newValue = Math.max(newValue, this.minV);
+    this.setState({value: newValue})
+  };
+
+  setValue = (newValue) => {
+    this.setState({value: newValue})
+  };
+
   state = {
     raisebar: false,
-    value: 0
+    value: Math.min(this.props._.game.currentBet * 2, this.props._.game.players[this.props._.net.seat].chips + this.props._.game.players[this.props._.net.seat].bet)
   }
-
-  valueCallback = (childValue) => {this.setState({value: childValue})}
 
   toggleRaiseBar = () => {
     if (this.state.raisebar) {
       this.props._.net.bet(this.state.value)
+    } else {
+      this.setState({value: this.minV});
     }
+
     this.setState (prevState =>({
       raisebar: !prevState.raisebar
     }))
@@ -71,18 +69,26 @@ export class ControlBox extends React.Component {
     }
   }
 
+  clearRaiseBar = () => {
+    this.setState({raisebar: false});
+  }
+
   render() {
-    const renderRaiseBar = () =>{
+    this.self = this.props._.game.players[this.props._.net.seat];
+    this.minV = Math.max(this.props._.game.currentBet * 2, this.props._.game.bigBlind);
+    this.minV = Math.min(this.minV, this.self.chips + this.self.bet);
+    this.maxV = this.self.chips + this.self.bet;
+    const renderRaiseBar = () => {
       if (this.state.raisebar){
-        return <SliderWithInputFormControl state={this.props._} valueCallback={this.valueCallback}/>
+        return <SliderWithInputFormControl value={this.state.value} minV={this.minV} maxV={this.maxV} sendValue={this.sendValue} setValue={this.setValue}/>
       }
     }
     const renderControlButton = () =>{
       if (this.props._.game.currentPlayer === this.props._.net.seat){
         return <div className="btn-group">
           <Button variant="danger" onClick={() => this.props._.net.startGame()}>New Hand</Button>
-          <Button variant="primary" onClick={() => this.props._.net.fold()}>Fold</Button>
-      <Button variant="secondary" onClick={() => this.props._.net.bet(this.props._.game.currentBet)}>{this.getCallorCheck()}</Button>
+          <Button variant="primary" onClick={() => {this.props._.net.fold(); this.clearRaiseBar()}}>Fold</Button>
+      <Button variant="secondary" onClick={() => {this.props._.net.bet(this.props._.game.currentBet); this.clearRaiseBar()}}>{this.getCallorCheck()}</Button>
           <Button variant="success" onClick = {this.toggleRaiseBar}>Raise</Button>
         </div>
       }

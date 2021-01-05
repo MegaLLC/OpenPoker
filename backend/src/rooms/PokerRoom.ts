@@ -13,7 +13,7 @@ export class PokerRoom extends Room<PokerState> {
     this.setState(new PokerState());
 
     this.onMessage("start", (client, message) => {
-      console.log(client.id + " said " + message);
+      console.log(client.id + " has started a game");
       newHand(this.state, this);
     });
 

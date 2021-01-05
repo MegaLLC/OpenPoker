@@ -1,10 +1,12 @@
 import _ from "lodash";
 import { PokerState } from "../schema/PokerState";
+import { PotState } from "../schema/PotState";
 import { MAX_PLAYERS } from "./PokerConstants";
 import { getNextPlayer } from "./PokerHelper";
 import { newHand } from "./PokerLogic";
 import { betPlayer, foldPlayer } from "./PokerPlayerLogic";
-import { MOCK_ROOM } from "./MockRoom";
+import { MOCK_ROOM, sumPot } from "./TestHelpers";
+import { SetSchema, ArraySchema } from "@colyseus/schema";
 
 jest.useFakeTimers();
 
@@ -38,16 +40,13 @@ describe("foldPlayer() tests", () => {
     state.players[3].bet = 30;
     state.players[2].isFolded = false;
     state.players[2].bet = 10;
-    state.pot = 200;
-    const statecopy = state.clone();
-    statecopy.players[2].bet = 0;
-    statecopy.players[2].isFolded = true;
-    statecopy.players[3].bet = 0;
-    statecopy.players[3].chips += 240;
-    statecopy.pot = 0;
-    statecopy.street = 4;
+    state.currentPlayer = 2;
+    state.lastPlayer = 3;
+    let potState = new PotState();
+    potState.chips = 200;
+    potState.contenders = new SetSchema<number>([3, 2]);
+    state.pot.push(potState);
     foldPlayer(state, 2, MOCK_ROOM);
-    expect(state).toStrictEqual(statecopy);
     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), expect.any(Number));
   });
 });
@@ -89,12 +88,15 @@ describe("betPlayer() tests", () => {
     expect(state).toStrictEqual(stateCopy);
   });
 
-  test("Insufficient funds to call", () => {
+  test("Call above funds is all in", () => {
     newHand(state, MOCK_ROOM);
     state.currentBet = state.players[5].chips + 1;
     let stateCopy = state.clone();
+    stateCopy.players[5].bet = stateCopy.players[5].chips;
+    stateCopy.players[5].chips = 0;
+    stateCopy.currentPlayer = 6;
 
-    expect(betPlayer(state, 5, state.currentBet, MOCK_ROOM)).toBe(false);
+    expect(betPlayer(state, 5, state.currentBet, MOCK_ROOM)).toBe(true);
     expect(state).toStrictEqual(stateCopy);
   });
 

@@ -81,7 +81,6 @@ export class Network {
       .then((room) => this.onJoin(room))
       // success
       .then(() => {
-        console.log("connected");
         this.connected = true;
       })
       // can't connect

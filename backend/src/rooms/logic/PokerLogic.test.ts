@@ -2,8 +2,9 @@ import { advancePlayer, findWinners, newHand, submitBets } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
-import { MOCK_ROOM } from "./MockRoom";
+import { MOCK_ROOM } from "./TestHelpers";
 import { PotState } from "../schema/PotState";
+import { SetSchema } from "@colyseus/schema";
 
 function createPokerState(board: Array<string>, hands: Array<Array<string>>): PokerState {
   let state = new PokerState();
@@ -198,7 +199,12 @@ describe("findWinner() tests", () => {
       p.isFolded = true;
     });
     state.players[4].isFolded = false;
-    expect(findWinners(state)).toStrictEqual([4]);
+    expect(
+      findWinners(
+        state,
+        new SetSchema<number>([4])
+      )
+    ).toStrictEqual([4]);
   });
 });
 
@@ -229,7 +235,6 @@ describe("submitBets() tests", () => {
     bet1.chips = 100;
     bet1.contenders.add(2);
     bet1.contenders.add(3);
-    console.log(state.pot.at(0));
     expect(state.pot.at(0)).toStrictEqual(bet1);
     expect(state.pot.length).toBe(1);
   });

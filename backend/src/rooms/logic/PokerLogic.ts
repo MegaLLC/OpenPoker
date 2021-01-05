@@ -50,14 +50,32 @@ export function newHand(state: PokerState, room: PokerRoom) {
 
 export function advancePlayer(state: PokerState, room: PokerRoom) {
   state.currentPlayer = PH.getNextPlayer(state, state.currentPlayer);
+
   if (state.currentPlayer === state.lastPlayer) {
-    advanceStreet(state, room);
+    let gameEnded = advanceStreet(state, room);
+    if (gameEnded) return;
   }
 
   // if player is all in, skip them
   if (state.players[state.currentPlayer].chips == 0) {
     advancePlayer(state, room);
   }
+
+  // keep advancing if all players are folded
+  if (checkRoundEnd(state, room)) {
+    advancePlayer(state, room);
+  }
+}
+
+function checkRoundEnd(state: PokerState, room: PokerRoom): boolean {
+  let activePlayers = 0;
+  state.players.forEach((p) => {
+    if (p.isSeated && !p.isFolded) {
+      activePlayers++;
+    }
+  });
+
+  return activePlayers == 1;
 }
 
 // clear out bets and put it into the pot
@@ -76,9 +94,7 @@ export function submitBets(state: PokerState) {
 
     for (let i = 0; i < bets.length; i++) {
       if (bets[i] >= 0) {
-        if (!state.players[i].isFolded) {
-          potState.contenders.add(i);
-        }
+        potState.contenders.add(i);
       }
     }
     potState.chips = smallestBet * potState.contenders.size;
@@ -86,11 +102,16 @@ export function submitBets(state: PokerState) {
   }
 }
 
-function advanceStreet(state: PokerState, room: PokerRoom) {
+function advanceStreet(state: PokerState, room: PokerRoom): boolean {
   submitBets(state);
 
-  console.log(state.pot);
-  console.log(state.pot.length);
+  for (let i = 0; i < state.pot.length; i++) {
+    state.pot[i].contenders.forEach((pid) => {
+      // delete from pot if folded
+      if (state.players[pid].isFolded) state.pot[i].contenders.delete(pid);
+    });
+  }
+
   state.street++;
   state.currentPlayer = PH.getNextPlayer(state, state.currentDealer);
   state.currentBet = 0;
@@ -98,19 +119,19 @@ function advanceStreet(state: PokerState, room: PokerRoom) {
   room.notifyBoard();
   if (state.street == Streets.SHOWDOWN) {
     endGame(state, room);
+    return true;
   }
+  return false;
 }
 
-export function findWinners(state: PokerState, contenders: SetSchema<number>): Array<number> {
+export function findWinners(state: PokerState, contenders?: SetSchema<number>): Array<number> {
   var board = [state.card1, state.card2, state.card3, state.card4, state.card5];
   var currWinners = []; // indices of winners
-
-  console.log(contenders);
 
   // find winners out of all players
   for (let i = 0; i < MAX_PLAYERS; ++i) {
     // ignores those not in the pot
-    if (!contenders.has(i)) continue;
+    if (contenders && !contenders.has(i)) continue;
 
     let player = state.players[i];
 
