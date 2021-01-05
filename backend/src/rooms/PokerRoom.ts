@@ -98,7 +98,7 @@ export class PokerRoom extends Room<PokerState> {
       ["EM", "EM"],
     ];
     this.clients.forEach((c) => {
-      c.send("showdown", hands);
+      c.send("hands", hands);
     });
   }
 

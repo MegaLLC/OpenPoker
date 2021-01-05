@@ -3,11 +3,3 @@
   right: 15px;
   bottom: 15px;
 }
-
-.btn-group.special {
-  display: flex;
-}
-
-.special .btn {
-  flex: 1;
-}

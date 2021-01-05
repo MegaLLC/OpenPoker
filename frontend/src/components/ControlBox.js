@@ -79,7 +79,7 @@ export class ControlBox extends React.Component {
     }
     const renderControlButton = () =>{
       if (this.props._.game.currentPlayer === this.props._.net.seat){
-        return <div className="btn-group special">
+        return <div className="btn-group">
           <Button variant="danger" onClick={() => this.props._.net.startGame()}>New Hand</Button>
           <Button variant="primary" onClick={() => this.props._.net.fold()}>Fold</Button>
       <Button variant="secondary" onClick={() => this.props._.net.bet(this.props._.game.currentBet)}>{this.getCallorCheck()}</Button>

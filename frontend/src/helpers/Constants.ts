@@ -1,7 +1,7 @@
 export const defaultState = {
   currentPlayer: 0,
   currentDealer: 0,
-  pot: 0,
+  pot: [],
   currentBet: 0,
   card1: "",
   card2: "",

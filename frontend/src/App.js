@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 import { ToastContainer } from "react-toastify";
+import { sum } from "lodash";
 
 import Card from "./components/Card";
 import createPlayerlist from "./components/Player";
@@ -42,11 +43,15 @@ WholeBoard
     hd and em
 */
 const PokerTable = (props) => {
+  let pot = 0;
+  if (props._.game.pot.length) {
+    pot = props._.game.pot.map((potState) => potState.chips).reduce(sum);
+  }
   return (
     <div className="col-9 m-auto table" style={{ height: "100%" }}>
       {/* Inside table */}
       <Badge variant="info" className="pot-display">
-        <h4>{props._.game.pot}</h4>
+        <h4>{pot}</h4>
       </Badge>
       <div className="board-cards">
         <Card card={props._.game.card1}></Card>

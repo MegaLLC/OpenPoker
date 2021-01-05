@@ -39,6 +39,8 @@ export function betPlayer(state: PokerState, seat: number, betMessage: number, r
   return betSuccess;
 }
 
+// TODO prevent bets that are greater than neccessary
+
 function doBetPlayer(state: PokerState, seat: number, betMessage: number): boolean {
   let playerCurrentBet = state.players[seat].bet;
 

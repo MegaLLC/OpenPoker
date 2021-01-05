@@ -7,5 +7,5 @@ export class PotState extends Schema {
   chips: number = 0;
 
   @type({ set: "number" })
-  players = new SetSchema<number>();
+  contenders = new SetSchema<number>();
 }

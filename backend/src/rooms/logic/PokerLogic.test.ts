@@ -1,4 +1,4 @@
-import { advancePlayer, findWinner, newHand, submitBets } from "./PokerLogic";
+import { advancePlayer, findWinners, newHand, submitBets } from "./PokerLogic";
 
 import { PokerState } from "../schema/PokerState";
 import { MAX_PLAYERS, Streets } from "./PokerConstants";
@@ -122,7 +122,7 @@ describe("findWinner() tests", () => {
         ["3c", "7d"],
       ]
     );
-    expect(findWinner(state)).toStrictEqual([0]);
+    expect(findWinners(state)).toStrictEqual([0]);
   });
 
   test("9 Players two winners", () => {
@@ -140,7 +140,7 @@ describe("findWinner() tests", () => {
         ["9s", "Tc"], // winner 2
       ]
     );
-    expect(findWinner(state)).toStrictEqual([4, 8]);
+    expect(findWinners(state)).toStrictEqual([4, 8]);
   });
 
   test("9 Players three winners", () => {
@@ -158,7 +158,7 @@ describe("findWinner() tests", () => {
         ["Ad", "7s"],
       ]
     );
-    expect(findWinner(state)).toStrictEqual([1, 4, 7]);
+    expect(findWinners(state)).toStrictEqual([1, 4, 7]);
   });
 
   test("9 Players all winners", () => {
@@ -176,7 +176,7 @@ describe("findWinner() tests", () => {
         ["3h", "Td"],
       ]
     );
-    expect(findWinner(state)).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(findWinners(state)).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   });
 
   test("players folded", () => {
@@ -198,7 +198,7 @@ describe("findWinner() tests", () => {
       p.isFolded = true;
     });
     state.players[4].isFolded = false;
-    expect(findWinner(state)).toStrictEqual([4]);
+    expect(findWinners(state)).toStrictEqual([4]);
   });
 });
 
@@ -227,8 +227,8 @@ describe("submitBets() tests", () => {
 
     const bet1 = new PotState();
     bet1.chips = 100;
-    bet1.players.add(2);
-    bet1.players.add(3);
+    bet1.contenders.add(2);
+    bet1.contenders.add(3);
     console.log(state.pot.at(0));
     expect(state.pot.at(0)).toStrictEqual(bet1);
     expect(state.pot.length).toBe(1);
@@ -240,15 +240,15 @@ describe("submitBets() tests", () => {
 
     const bet1 = new PotState();
     bet1.chips = 150;
-    bet1.players.add(0);
-    bet1.players.add(2);
-    bet1.players.add(5);
+    bet1.contenders.add(0);
+    bet1.contenders.add(2);
+    bet1.contenders.add(5);
     expect(state.pot.at(0)).toStrictEqual(bet1);
 
     const bet2 = new PotState();
     bet2.chips = 100;
-    bet2.players.add(0);
-    bet2.players.add(5);
+    bet2.contenders.add(0);
+    bet2.contenders.add(5);
     expect(state.pot.at(1)).toStrictEqual(bet2);
 
     expect(state.pot.length).toBe(2);
@@ -260,57 +260,57 @@ describe("submitBets() tests", () => {
 
     const bet1 = new PotState();
     bet1.chips = 9;
-    bet1.players.add(0);
-    bet1.players.add(1);
-    bet1.players.add(2);
-    bet1.players.add(3);
-    bet1.players.add(4);
-    bet1.players.add(5);
-    bet1.players.add(6);
-    bet1.players.add(7);
-    bet1.players.add(8);
+    bet1.contenders.add(0);
+    bet1.contenders.add(1);
+    bet1.contenders.add(2);
+    bet1.contenders.add(3);
+    bet1.contenders.add(4);
+    bet1.contenders.add(5);
+    bet1.contenders.add(6);
+    bet1.contenders.add(7);
+    bet1.contenders.add(8);
     expect(state.pot.at(0)).toStrictEqual(bet1);
 
     const bet2 = new PotState();
     bet2.chips = 8;
-    bet2.players.add(1);
-    bet2.players.add(2);
-    bet2.players.add(3);
-    bet2.players.add(4);
-    bet2.players.add(5);
-    bet2.players.add(6);
-    bet2.players.add(7);
-    bet2.players.add(8);
+    bet2.contenders.add(1);
+    bet2.contenders.add(2);
+    bet2.contenders.add(3);
+    bet2.contenders.add(4);
+    bet2.contenders.add(5);
+    bet2.contenders.add(6);
+    bet2.contenders.add(7);
+    bet2.contenders.add(8);
     expect(state.pot.at(1)).toStrictEqual(bet2);
 
     const bet3 = new PotState();
     bet3.chips = 7;
-    bet3.players.add(2);
-    bet3.players.add(3);
-    bet3.players.add(4);
-    bet3.players.add(5);
-    bet3.players.add(6);
-    bet3.players.add(7);
-    bet3.players.add(8);
+    bet3.contenders.add(2);
+    bet3.contenders.add(3);
+    bet3.contenders.add(4);
+    bet3.contenders.add(5);
+    bet3.contenders.add(6);
+    bet3.contenders.add(7);
+    bet3.contenders.add(8);
     expect(state.pot.at(2)).toStrictEqual(bet3);
 
     const bet4 = new PotState();
     bet4.chips = 6;
-    bet4.players.add(3);
-    bet4.players.add(4);
-    bet4.players.add(5);
-    bet4.players.add(6);
-    bet4.players.add(7);
-    bet4.players.add(8);
+    bet4.contenders.add(3);
+    bet4.contenders.add(4);
+    bet4.contenders.add(5);
+    bet4.contenders.add(6);
+    bet4.contenders.add(7);
+    bet4.contenders.add(8);
     expect(state.pot.at(3)).toStrictEqual(bet4);
 
     const bet5 = new PotState();
     bet5.chips = 25;
-    bet5.players.add(4);
-    bet5.players.add(5);
-    bet5.players.add(6);
-    bet5.players.add(7);
-    bet5.players.add(8);
+    bet5.contenders.add(4);
+    bet5.contenders.add(5);
+    bet5.contenders.add(6);
+    bet5.contenders.add(7);
+    bet5.contenders.add(8);
     expect(state.pot.at(4)).toStrictEqual(bet5);
 
     expect(state.pot.length).toBe(5);

@@ -6,6 +6,7 @@ import * as PH from "./PokerHelper";
 import { PokerRoom } from "../PokerRoom";
 import { max, min } from "lodash";
 import { PotState } from "../schema/PotState";
+import { SetSchema } from "@colyseus/schema";
 
 export function newHand(state: PokerState, room: PokerRoom) {
   // distribute cards and reset board.
@@ -42,7 +43,7 @@ export function newHand(state: PokerState, room: PokerRoom) {
   state.players[big].bet = state.bigBlind;
 
   state.currentBet = state.bigBlind;
-  room.notifyClearHands();
+  // room.notifyClearHands();
   room.notifyHands(true);
   room.notifyBoard();
 }
@@ -51,6 +52,11 @@ export function advancePlayer(state: PokerState, room: PokerRoom) {
   state.currentPlayer = PH.getNextPlayer(state, state.currentPlayer);
   if (state.currentPlayer === state.lastPlayer) {
     advanceStreet(state, room);
+  }
+
+  // if player is all in, skip them
+  if (state.players[state.currentPlayer].chips == 0) {
+    advancePlayer(state, room);
   }
 }
 
@@ -70,16 +76,21 @@ export function submitBets(state: PokerState) {
 
     for (let i = 0; i < bets.length; i++) {
       if (bets[i] >= 0) {
-        potState.players.add(i);
+        if (!state.players[i].isFolded) {
+          potState.contenders.add(i);
+        }
       }
     }
-    potState.chips = smallestBet * potState.players.size;
+    potState.chips = smallestBet * potState.contenders.size;
     state.pot.push(potState);
   }
 }
 
 function advanceStreet(state: PokerState, room: PokerRoom) {
   submitBets(state);
+
+  console.log(state.pot);
+  console.log(state.pot.length);
   state.street++;
   state.currentPlayer = PH.getNextPlayer(state, state.currentDealer);
   state.currentBet = 0;
@@ -90,26 +101,29 @@ function advanceStreet(state: PokerState, room: PokerRoom) {
   }
 }
 
-export function findWinner(state: PokerState): Array<number> {
+export function findWinners(state: PokerState, contenders: SetSchema<number>): Array<number> {
   var board = [state.card1, state.card2, state.card3, state.card4, state.card5];
   var currWinners = []; // indices of winners
 
+  console.log(contenders);
+
   // find winners out of all players
   for (let i = 0; i < MAX_PLAYERS; ++i) {
+    // ignores those not in the pot
+    if (!contenders.has(i)) continue;
+
     let player = state.players[i];
 
-    // ignore players not in game
-    if (!player.isSeated || player.isFolded) continue;
-
     // hand of current player
-    let p = Hand.solve([player.card1, player.card2, ...board]);
+    let playerHand = Hand.solve([player.card1, player.card2, ...board]);
 
     if (currWinners.length == 0) {
       currWinners.push(i);
     } else {
       // compare hands
       let leader = state.players[currWinners[0]];
-      let cmp = Hand.solve([leader.card1, leader.card2, ...board]).compare(p);
+      const leaderHand = Hand.solve([leader.card1, leader.card2, ...board]);
+      let cmp = leaderHand.compare(playerHand);
       if (cmp === 1) {
         // found a better hand, discard current winners
         currWinners = [];
@@ -126,17 +140,22 @@ export function findWinner(state: PokerState): Array<number> {
 export function endGame(state: PokerState, room: PokerRoom): void {
   state.street = Streets.SHOWDOWN;
   submitBets(state);
-  const winners = findWinner(state);
-  // const winnings = Math.round((state.pot * 100) / winners.length) / 100;
-  // TODO fix this
-  const winnings = 0;
-  // state.pot = 0;
-  winners.forEach((i) => {
-    state.players[i].chips += winnings;
-  });
+
+  let allWinners = new Set();
+
+  while (state.pot.length) {
+    const currentPot = state.pot.pop();
+    const winners = findWinners(state, currentPot.contenders);
+    const winnings = Math.round((currentPot.chips * 100) / winners.length) / 100;
+    winners.forEach((i) => {
+      state.players[i].chips += winnings;
+    });
+    allWinners = new Set([...allWinners, ...winners]);
+  }
+
   setTimeout(() => {
     newHand(state, room);
   }, 5000);
-  room.notifyResults(winners);
+  room.notifyResults(<number[]>[...allWinners]);
   room.notifyHands(false);
 }
